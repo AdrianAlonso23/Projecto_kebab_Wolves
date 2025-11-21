@@ -1,0 +1,105 @@
+*{
+    margin: 0;
+    font-family: 'Albert Sans', sans-serif;
+}
+.menu{
+    align-items: center;
+}
+.fondo-nav-principal{
+    background-color: #FDB913;
+        align-items: center;
+}
+.fondo-nav-superior{
+    align-items: center;  
+
+}
+.nav-superior{
+    color: #ffff;
+    display:flex;
+
+}
+
+.nav-ul{
+    text-decoration: none;
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
+    gap: 50px;
+    margin-right: 20px;
+    margin-top: 10px;
+    font-weight: bold;
+}
+.menu-ul a{
+    text-decoration: none;
+    color: #FDB913;
+}
+.div-ul{
+    background-color: black;
+    width: 100%;
+    padding: 5px;
+}
+.ruta-pagina{
+    color: black;
+    font-weight: bold;
+    background-color: #ffff;
+    padding: 5px;
+    width: 100%;
+}
+.navbar-nav .nav-link {
+    font-size: 15px;
+    margin-right: 20px;
+}
+
+.navbar-toggler {
+    border: none !important;
+}
+
+.dropdown-toggle::after {
+    margin-left: 6px;
+    font-size: 10px;
+}
+.imagen-header{
+    background-image: url(../img/5ed80c7b-17fe-463b-a6a2-e07888249d0b.png);
+    background-size: cover;
+    background-position: 50% 45%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    height: 666px;
+}
+.card-bg{
+    background-color: rgba(0,0,0, 0.7);
+    text-align: center;
+    width: 30%;
+    color: #fff;
+    padding: 50px;
+}
+.card-text{
+    margin-top: 45px;
+    font-size: 24px;
+}
+.titulo-populares{
+    justify-content: center;
+    display: flex;
+    margin-top: 50px;
+    text-align: center;
+}
+.titulo-populares h2{
+    border: #FDB913;
+    border-bottom: 5px solid #FDB913;
+    width: 270px;
+    font-weight: bold;
+}
+.populares{
+    display: flex;
+    justify-content: center;
+    gap: 10%;
+    margin-top: 100px;
+    margin-bottom: 25px;
+}S
+.card-text-populares{
+    font-size: 0.9rem;
+}
+.btn btn-primary{
+    border-radius: none;
+}
