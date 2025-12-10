@@ -7,3 +7,4 @@
 <img src="../../public/img/<?=$producto->getIMAGEN()?>"
      alt="<?=$producto->getNOMBRE()?>"
      style="width:200px;">
+ 

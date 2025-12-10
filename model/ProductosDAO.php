@@ -15,7 +15,7 @@ class ProductosDAO {
         $connection->close();
 
         return $producto;
-    }
+    } 
 
     public static function getProductos($limit = null){
         $connection = database::connect();

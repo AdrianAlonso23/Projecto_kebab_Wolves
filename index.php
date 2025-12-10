@@ -16,4 +16,4 @@ if(isset($_GET['controller'])){
     $controller = new ProductosController();
     $controller->index();
 }
-?>
+?>  

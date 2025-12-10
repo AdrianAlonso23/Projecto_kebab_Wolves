@@ -24,7 +24,7 @@
                     <p><strong><?=$producto->getPRECIO()?> €</strong></p>
                     <a href="index.php?controller=Productos&action=show&PRODUCTO_ID=<?=$producto->getPRODUCTO_ID()?>" class="btn btn-primary">
                         Agregar
-                    </a>
+                    </a> 
                 </div>
             </div>
         <?php endforeach; ?>
