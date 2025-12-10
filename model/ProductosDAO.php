@@ -1,44 +1,54 @@
 <?php
-include_once 'database/database.php';
-include_once 'Productos.php';
+require_once "database/database.php";
+require_once "model/Productos.php";
 
 class ProductosDAO {
 
-    public static function getProductosByID($PRODUCTO_ID){
-        $connection = database::connect();
-        $stmt = $connection->prepare("SELECT * FROM productos WHERE PRODUCTO_ID = ?");
-        $stmt->bind_param("i", $PRODUCTO_ID);
-        $stmt->execute();
-        $results = $stmt->get_result();
-
-        $producto = $results->fetch_object('Productos'); // clase Productos correcta
-        $connection->close();
-
-        return $producto;
-    } 
-
-    public static function getProductos($limit = null){
-        $connection = database::connect();
+    public static function getProductos() {
+        $conn = Database::connect();
         $sql = "SELECT * FROM productos";
-        
-        if($limit) {
-            $sql .= " LIMIT ?";
-            $stmt = $connection->prepare($sql);
-            $stmt->bind_param("i", $limit);
-        } else {
-            $stmt = $connection->prepare($sql);
-        }
-        
-        $stmt->execute();
-        $results = $stmt->get_result();
+        $result = $conn->query($sql);
 
         $listaproductos = [];
-        while($producto = $results->fetch_object('productos')){
-            $listaproductos[] = $producto;
+        while($row = $result->fetch_assoc()){
+            $listaproductos[] = new Productos(
+                $row['PRODUCTO_ID'],
+                $row['NOMBRE'],
+                $row['DESCRIPCION'],
+                $row['PRECIO'],
+                $row['IMAGEN'],
+                $row['CATEGORIA_ID'],
+                $row['OFERTA_ID'] ?? null
+            );
         }
-        
-        $connection->close();
+
+        $conn->close();
         return $listaproductos;
     }
+
+    public static function getProductosByCategoria($CATEGORIA_ID) {
+        $conn = Database::connect();
+        $sql = "SELECT * FROM productos WHERE CATEGORIA_ID = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $CATEGORIA_ID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $productos = [];
+        while($row = $result->fetch_assoc()){
+            $productos[] = new Productos(
+                $row['PRODUCTO_ID'],
+                $row['NOMBRE'],
+                $row['DESCRIPCION'],
+                $row['PRECIO'],
+                $row['IMAGEN'],
+                $row['CATEGORIA_ID'],
+                $row['OFERTA_ID'] ?? null
+            );
+        }
+
+        $stmt->close();
+        $conn->close();
+        return $productos;
+    }
 }
-?>
