@@ -16,4 +16,13 @@ class Categoria {
     public function getNOMBRE_CATEGORIA() {
         return $this->NOMBRE_CATEGORIA;
     }
+    
+    /******APi JSON ***********/
+
+    public function toArray() {
+        return [
+            'CATEGORIA_ID' => $this->CATEGORIA_ID,
+            'NOMBRE_CATEGORIA' => $this->NOMBRE_CATEGORIA
+        ];
+    }
 }

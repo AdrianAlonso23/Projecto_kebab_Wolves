@@ -16,4 +16,16 @@ class CartaController {
         $view = "carta.php";
         include "view/main.php";
     }
+    /***********Apis JSON *************/
+
+    public function getCategorias() {
+        $categorias = CategoriasDAO::getCategorias();
+        header('Content-Type: application/json; charset=utf-8');
+        $categorias = CategoriasDAO::getCategorias();
+        $data = [];
+        foreach ($categorias as $categoria) {
+            $data[] = $categoria->toArray();
+        }
+        echo json_encode($data);
+    }
 }
