@@ -11,16 +11,18 @@ class ProductosDAO {
 
         $listaproductos = [];
         while($row = $result->fetch_assoc()){
-            $listaproductos[] = new Productos(
-                $row['PRODUCTO_ID'],
-                $row['NOMBRE'],
-                $row['DESCRIPCION'],
-                $row['PRECIO'],
-                $row['IMAGEN'],
-                $row['CATEGORIA_ID'],
-                $row['OFERTA_ID'] ?? null
-            );
+            $producto = new Productos();
+            $producto->setPRODUCTO_ID($row['PRODUCTO_ID']);
+            $producto->setNOMBRE($row['NOMBRE']);
+            $producto->setDESCRIPCION($row['DESCRIPCION']);
+            $producto->setPRECIO($row['PRECIO']);
+            $producto->setIMAGEN($row['IMAGEN']);
+            $producto->setCATEGORIA_ID($row['CATEGORIA_ID']);
+            $producto->setOFERTA_ID($row['OFERTA_ID'] ?? null);
+
+            $listaproductos[] = $producto;
         }
+
 
         $conn->close();
         return $listaproductos;
@@ -35,20 +37,23 @@ class ProductosDAO {
         $result = $stmt->get_result();
 
         $productos = [];
+
         while($row = $result->fetch_assoc()){
-            $productos[] = new Productos(
-                $row['PRODUCTO_ID'],
-                $row['NOMBRE'],
-                $row['DESCRIPCION'],
-                $row['PRECIO'],
-                $row['IMAGEN'],
-                $row['CATEGORIA_ID'],
-                $row['OFERTA_ID'] ?? null
-            );
+            $p = new Productos();
+            $p->setPRODUCTO_ID($row['PRODUCTO_ID']);
+            $p->setNOMBRE($row['NOMBRE']);
+            $p->setDESCRIPCION($row['DESCRIPCION']);
+            $p->setPRECIO($row['PRECIO']);
+            $p->setIMAGEN($row['IMAGEN']);
+            $p->setCATEGORIA_ID($row['CATEGORIA_ID']);
+            $p->setOFERTA_ID($row['OFERTA_ID'] ?? null);
+
+            $productos[] = $p;
         }
 
         $stmt->close();
         $conn->close();
+
         return $productos;
     }
 }

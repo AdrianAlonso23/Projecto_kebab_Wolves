@@ -1,18 +1,3 @@
-<?php
-require_once "model/ProductosDAO.php";
-
-$productos = ProductosDAO::getProductos();
-?>
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Carta</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../public/css/style.css">
-</head>
-<body>
     <section>
         <div class="carta-container">
             <div class="titulo-carta">
@@ -47,5 +32,3 @@ $productos = ProductosDAO::getProductos();
             <?php endforeach; ?>
         </div>
     </section>
-</body>
-</html>

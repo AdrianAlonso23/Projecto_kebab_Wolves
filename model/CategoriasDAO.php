@@ -6,20 +6,22 @@ class CategoriasDAO {
 
     public static function getCategorias() {
         $conn = Database::connect();
-        $sql = "SELECT * FROM categorias";
+        $sql = "SELECT * FROM categorias ";
         $result = $conn->query($sql);
 
         $categorias = [];
 
         while ($row = $result->fetch_assoc()) {
-            $categorias[] = new Categoria(
-                $row['CATEGORIA_ID'],
-                $row['NOMBRE_CATEGORIA']
-            );
+            $categoria = new Categoria();
+            $categoria->setCATEGORIA_ID($row['CATEGORIA_ID']);
+            $categoria->setNOMBRE_CATEGORIA($row['NOMBRE_CATEGORIA']);
+            
+            $categorias[] = $categoria;
         }
 
         return $categorias;
     }
+    
 
     
 }

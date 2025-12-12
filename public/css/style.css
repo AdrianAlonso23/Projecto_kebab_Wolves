@@ -128,7 +128,7 @@
         text-align: center;
         color: #fff;
         padding: 20px;
-        width: 90%;
+        width: 80%;
     }
     .card-text{
         margin-top: 20px;
@@ -157,6 +157,8 @@
     padding:25px;
 }
 .card-img{
+    background-image: url(../img/fondo_productos.png);
+    background-size: cover;
     width: 384px;
     height: 300px;
 }
@@ -227,14 +229,16 @@
     fill: #fff;;
 }
 .img-hover-container {
+    background-image: url(../img/fondo_productos.png);
+    background-size: cover;
+    background-position: 50% 50%;
     position: relative;
     overflow: hidden;    
 }
 .img-fija {
-    width: 100%;
-    height: 650px;
-    object-fit: cover;
+    height: 400px;
     margin-bottom: 70px;
+    width: 80%;
 }
 
 .hover-text {
@@ -409,6 +413,13 @@
         border-bottom: 5px solid #FDB913;
         width: 300px;
         font-weight: bold;
+    }
+    .hexagon {
+        width: 55px;
+        height: 55px;
+    }
+    .mapa-nosotros iframe {
+        height: 400px;
     }
 }   
 

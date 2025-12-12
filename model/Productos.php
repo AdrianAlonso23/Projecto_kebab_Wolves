@@ -8,15 +8,8 @@
         private $CATEGORIA_ID;
         private $OEFERTA_ID;
 
-        public function __construct($PRODUCTO_ID, $NOMBRE, $DESCRIPCION, $PRECIO, $IMAGEN, $CATEGORIA_ID, $OFERTA_ID = null) {
-            $this->PRODUCTO_ID = $PRODUCTO_ID;
-            $this->NOMBRE = $NOMBRE;
-            $this->DESCRIPCION = $DESCRIPCION;
-            $this->PRECIO = $PRECIO;
-            $this->IMAGEN = $IMAGEN;
-            $this->CATEGORIA_ID = $CATEGORIA_ID;
-            $this->OFERTA_ID = $OFERTA_ID;
-        }
+        public function __construct(){}
+        
 
         public function getPRODUCTO_ID(){
             return $this->PRODUCTO_ID;
@@ -45,5 +38,34 @@
         public function getOFERTA_ID(){
             return $this -> OFERTA_ID;
         }
+
+        public function setPRODUCTO_ID($PRODUCTO_ID){
+            $this->PRODUCTO_ID = $PRODUCTO_ID;
+        }
+
+        public function setNOMBRE($NOMBRE){
+            $this->NOMBRE = $NOMBRE;
+        }
+
+        public function setDESCRIPCION($DESCRIPCION){
+            $this->DESCRIPCION = $DESCRIPCION;
+        }
+
+        public function setPRECIO($PRECIO){
+            $this -> PRECIO = $PRECIO;
+        }
+
+        public function setIMAGEN($IMAGEN){
+            $this -> IMAGEN = $IMAGEN;
+        }
+
+        public function setCATEGORIA_ID($CATEGORIA_ID){
+            $this -> CATEGORIA_ID = $CATEGORIA_ID;
+        }
+
+        public function setOFERTA_ID($OFERTA_ID){
+            $this -> OFERTA_ID = $OFERTA_ID;
+        }
+        
     }
 ?>

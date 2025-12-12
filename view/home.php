@@ -102,7 +102,10 @@
 
                 <div class="dato">
                     <div class="hexagon"><img src="public/iconos/location-svgrepo-com.svg"></div>
-                    <p>Waterloo Rd, Wolverhampton WV1 4QR, Reino Unido</p>
+                    <div>
+                        <p>Waterloo Rd, Wolverhampton</p>
+                        <p> WV1 4QR,Reino Unido</p>
+                    </div>
                 </div>
 
                 <div class="texto-quienes">

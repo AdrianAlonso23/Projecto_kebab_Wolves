@@ -5,6 +5,7 @@
     include_once "controller/ProductosController.php";
     include_once "controller/RegistroController.php";
     include_once "controller/ContactoController.php";
+    include_once "controller/AdminController.php";
 
     if(session_status() == PHP_SESSION_NONE){
         session_start();
