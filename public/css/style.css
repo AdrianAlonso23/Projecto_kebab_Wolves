@@ -401,7 +401,7 @@
     font-size: 1.2rem;
 }
 
-/* 📱 Responsive */
+/* --- VERSIÓN MÓVIL --- */
 @media (max-width: 480px) {
     .contenedor-nosotros {
         flex-direction: column;

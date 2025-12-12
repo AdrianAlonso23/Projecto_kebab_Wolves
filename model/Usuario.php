@@ -55,5 +55,17 @@
             $this->ROL = $ROL;
         }
 
+
+        /****** Api JSON *********/
+        public function toArray() {
+            return [
+                'USUARIO_ID' => $this->USUARIO_ID,
+                'NOMBRE' => $this->NOMBRE,
+                'CORREO' => $this->CORREO,
+                'CONTRASENA' => $this->CONTRASENA,
+                'TELEFONO' => $this->TELEFONO,
+                'ROL' => $this->ROL
+            ];
+        }
     }
 ?>

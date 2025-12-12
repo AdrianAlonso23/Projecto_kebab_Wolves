@@ -37,5 +37,27 @@ require_once 'model/Usuario.php';
             $stmt->bind_param("sssss", $NOMBRE, $CORREO, $CONTRASENA, $TELEFONO, $ROL);
             $stmt->execute();
         }
+
+        public function GetUsuarios(){
+            $con = database::connect();
+            $sql = "SELECT * FROM usuarios";
+            $result = $con->query($sql);
+
+            $usuarios = [];
+
+            while($row = $result->fetch_assoc()){
+                $usuario = new Usuario();
+                $usuario->setUSUARIO_ID($row['USUARIO_ID']);
+                $usuario->setNOMBRE($row['NOMBRE']);
+                $usuario->setCORREO($row['CORREO']);
+                $usuario->setCONTRASENA($row['CONTRASENA']);
+                $usuario->setTELEFONO($row['TELEFONO']);
+                $usuario->setROL($row['ROL']);
+
+                $usuarios[] = $usuario;
+            }
+
+            return $usuarios;
+        }
     }
 ?>
