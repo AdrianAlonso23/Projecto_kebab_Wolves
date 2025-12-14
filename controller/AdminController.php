@@ -1,5 +1,7 @@
 <?php
     include_once "model/ProductosDAO.php";
+    include_once "model/CategoriasDAO.php";
+    include_once "model/UsuarioDAO.php";
 
     class AdminController {
 
@@ -8,17 +10,6 @@
             include "view/main.php";
         }
         /***********Apis JSON *************/
-
-        public function getProductos() {
-            $productos = ProductosDAO::getProductos();
-            header('Content-Type: application/json; charset=utf-8');
-            $data = [];
-            foreach ($productos as $producto) {
-                $data[] = $producto->toArray();
-            }
-            echo json_encode($data);
-        }
-
         public function getCategorias() {
             $categorias = CategoriasDAO::getCategorias();
             header('Content-Type: application/json; charset=utf-8');
@@ -31,9 +22,9 @@
         }
 
         public function getUsuarios() {
-            $usuarios = UsuariosDAO::getUsuarios();
+            $usuarios = UsuarioDAO::getUsuarios();
 
-            header('Content-Type: application/json');
+            header('Content-Type: application/json; charset=utf-8');
 
             $data = [];
             foreach ($usuarios as $u) {
@@ -41,6 +32,7 @@
             }
 
             echo json_encode($data);
+            exit;
         }
     }
 ?>

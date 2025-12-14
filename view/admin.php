@@ -95,6 +95,25 @@
         })
     };
 
+    document.addEventListener("DOMContentLoaded", fetchUsuarios);
+
+    function fetchUsuarios() {
+        fetch('?controller=Admin&action=getUsuarios')
+            .then(response => response.json())
+            .then(data => {
+                const lista = document.getElementById('listaUsuarios');
+                lista.innerHTML = '';
+
+                data.forEach(u => {
+                    const li = document.createElement('li');
+                    li.textContent = `${u.NOMBRE} - ${u.CORREO} (${u.ROL})`;
+                    lista.appendChild(li);
+                });
+            })
+            .catch(err => console.error('Error usuarios:', err));
+    };
+
+
     const buttons = document.querySelectorAll('button');
     const sections = document.querySelectorAll('section');
 

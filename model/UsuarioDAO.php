@@ -38,7 +38,7 @@ require_once 'model/Usuario.php';
             $stmt->execute();
         }
 
-        public function GetUsuarios(){
+        public static function getUsuarios(){
             $con = database::connect();
             $sql = "SELECT * FROM usuarios";
             $result = $con->query($sql);
