@@ -1,46 +1,25 @@
-<style>
-    section {
-        display: none;
-    };
-</style>
 <section class="d-flex">
     <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
-        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-            <svg class="bi me-2" width="40" height="32"></svg>
-            <span class="fs-4">Sidebar</span>
-        </a>
+        <p class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <span class="fs-4">Menu Aministración</span>
+        </p>
         <hr>
-        <ul class="nav nav-pills flex-column mb-auto">
-        <li class="nav-item">
-            <button>
-            <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
-            Home
-            </button>
-        </li>
-        <li>
-            <button>
-            <svg class="bi me-2" width="16" height="16"><use xlink:href="#speedometer2"></use></svg>
-            Dashboard
-            </buttton>
-        </li>
-        <li>
-            <button>
-            <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
-            Orders
-            </button>
-        </li>
-        <li>
-            <button>
-            <svg class="bi me-2" width="16" height="16"><use xlink:href="#grid"></use></svg>
-            Products
-            </button>
-        </li>
-        <li>
-            <button>
-            <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"></use></svg>
-            Customers
-            </button>
-        </li>
+        <ul class=" flex-column mb-auto">
+            <li class="nav-item-admin ">
+                <button>Historial</button>
+            </li>
+            <li class="nav-item-admin"> 
+                <button>Usuarios</buttton>
+            </li>
+            <li class="nav-item-admin">
+                <button>Pedidos</button>
+            </li>
+            <li class="nav-item-admin">
+                <button>Productos</button>
+            </li>
+            <li class="nav-item-admin">
+                <button>Customers</button>
+            </li>
         </ul>
         <hr>
         <div class="dropdown">
@@ -54,23 +33,23 @@
             <li><a class="dropdown-item" href="#">Ajustes</a></li>
             <li><a class="dropdown-item" href="#">Perfil</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Cerrar Sesion</a></li>
+            <li><a class="dropdown-item" href="?controller=Home&action=index">Cerrar Sesion</a></li>
         </ul>
         </div>
     </div>
-    <section class="section1  p-4 w-100">
+    <section class="section-admin  p-4 w-100">
         <?php echo('deide')?>;
     </section>
-    <section class="section2  p-4 w-100 ">
+    <section class="section-admin  p-4 w-100 ">
         <ul id="listaUsuarios"></ul>
     </section>
-    <section class="section3  p-4 w-100 ">
+    <section class="section-admin  p-4 w-100 ">
         <ul id="listaCategorias"></ul>
     </section>
-    <section class="section4  p-4 w-100 ">
-        <?php echo('4eide')?>;
+    <section class="section-admin p-4 w-100">
+        <div id="productosContainer" class="d-flex flex-wrap gap-3"></div>
     </section>
-    <section class="section5  p-4 w-100">
+    <section class="section-admin  p-4 w-100">
         <div>
             <p>dfedwed</p>
         </div>
@@ -81,7 +60,7 @@
     document.addEventListener("DOMContentLoaded", fetchCategorias);
 
     function fetchCategorias() {
-        fetch('?controller=Admin&action=getCategorias')
+        fetch('?controller=Api&action=getCategorias')
         .then(response => response.json())
         .then(data => {
             console.log(data);
@@ -94,11 +73,11 @@
             });
         })
     };
-
+    /****fetch api de usuarios *****/
     document.addEventListener("DOMContentLoaded", fetchUsuarios);
 
     function fetchUsuarios() {
-        fetch('?controller=Admin&action=getUsuarios')
+        fetch('?controller=Api&action=getUsuarios')
             .then(response => response.json())
             .then(data => {
                 const lista = document.getElementById('listaUsuarios');
@@ -138,15 +117,59 @@
     });
 
 
-    class Usuario {
-        constructor(id, nombre, email, telefono, rol) {
-            this.usuario_id = id;
-            this.nombre = nombre;
-            this.email = email;
-            this.telefono = telefono;
-            this.rol = rol;
+    class Producto {
+        constructor(PRODUCTO_ID, NOMBRE, DESCRIPCION, PRECIO, CATEGORIA_ID, IMAGEN){
+            this.PRODUCTO_ID = PRODUCTO_ID;
+            this.NOMBRE = NOMBRE;
+            this.DESCRIPCION = DESCRIPCION;
+            this.PRECIO = PRECIO;
+            this.CATEGORIA_ID = CATEGORIA_ID;
+            this.IMAGEN = IMAGEN;
         }
     }
+
+    function mostrarProductos(productos) {
+        const container = document.getElementById('productosContainer');
+        container.innerHTML = ''; 
+
+        productos.forEach(producto => {
+            const div = document.createElement('div');
+            div.classList.add('card');
+            div.style.width = '18rem';
+
+            div.innerHTML = `
+                <img src="public/img/${producto.IMAGEN}" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">${producto.NOMBRE}</h5>
+                    <p class="card-text">${producto.DESCRIPCION}</p>
+                    <p class="card-text"><strong>Precio:</strong> $${producto.PRECIO}</p>
+                </div>
+            `;
+
+            container.appendChild(div);
+        });
+    }
+
+    function cargarProductos() {
+        fetch('?controller=Api&action=getProductos')
+            .then(response => response.json())
+            .then(data => {
+                const productos = data.map(p => new Producto(
+                    p.PRODUCTO_ID,
+                    p.NOMBRE,
+                    p.DESCRIPCION,
+                    p.PRECIO,
+                    p.CATEGORIA_ID,
+                    p.IMAGEN
+                ));
+
+                mostrarProductos(productos);
+                productos.forEach(producto => console.log('Producto:', producto));
+            })
+        .catch(err => console.error('Error al cargar productos:', err));
+    }
+
+    document.addEventListener("DOMContentLoaded", cargarProductos);
     
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

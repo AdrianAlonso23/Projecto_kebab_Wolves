@@ -66,6 +66,21 @@
         public function setOFERTA_ID($OFERTA_ID){
             $this -> OFERTA_ID = $OFERTA_ID;
         }
+     
         
+         /******* APi JSON ***********/
+
+        public function toArray() {
+            return [
+                'PRODUCTO_ID' => $this->PRODUCTO_ID,
+                'NOMBRE' => $this->NOMBRE,
+                'DESCRIPCION' => $this->DESCRIPCION,
+                'PRECIO' => $this->PRECIO,
+                'IMAGEN' => $this->IMAGEN,
+                'CATEGORIA_ID' => $this->CATEGORIA_ID,
+                'OFERTA_ID' => $this->OFERTA_ID
+            ];
+        }
     }
+
 ?>

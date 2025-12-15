@@ -44,7 +44,7 @@
                 </div>
             </div>
         </div>
-        <hr>
+        <hr class="hr-footer">
         <div class="links-footer d-flex">
             <ul class="lista-footer d-flex">
                 <li class="privacy-footer"><a href="">Getting here</a></li>
