@@ -20,7 +20,6 @@ class LoginController {
             if ($usuario) {
                 $hash = trim($usuario->getCONTRASENA());
                 if (password_verify($CONTRASENA, $hash)) {
-                    session_start();
                     $_SESSION['USUARIO_ID'] = $usuario->getUSUARIO_ID();
                     $_SESSION['NOMBRE'] = $usuario->getNOMBRE();
                     $_SESSION['ROL'] = $usuario->getROL();
@@ -40,6 +39,19 @@ class LoginController {
             header('Location: index.php?controller=Login&action=index');
             exit;
         }
+    }
+
+    public function logout() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        session_unset();
+
+        session_destroy();
+
+        header("Location: index.php?controller=Home&action=index");
+        exit;
     }
 }
 ?>

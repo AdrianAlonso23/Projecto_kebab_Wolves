@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kebab Wolves</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="public/css/style.css">
-</head>
-<body>
+<section>
     <div class="imagen-header">
         <div class="card-bg">
             <h1 class="card-title">KEBAB WOLVES</h1>
@@ -15,10 +6,10 @@
         </div>
     </div>
     <section class="fondo-populares">
-        <div class="titulo-populares">
+        <div class="titulo-populares container" >
             <h2>MAS POPULARES</h2> 
         </div>
-        <div class="d-flex row g-0">
+        <div class=" row g-0">
             <?php foreach($listaproductos as $producto): ?>
                 <?php if(in_array($producto->getPRODUCTO_ID(), [1,4,3,11])): ?>
                     <div class="col-12 col-md-3 d-flex justify-content-center mb-4">
@@ -29,8 +20,13 @@
                                 <h4 class="titulo-producto"><?=$producto->getNOMBRE()?></h4>
                                 <p class="descripcion-producto"><?=$producto->getDESCRIPCION()?></p>
                                 <p><strong><?=$producto->getPRECIO()?> €</strong></p>
-                                <button class="boton-agregar">
-                                    <a class="texto-boton" href="#">Agregar</a>
+                                <button class="boton-agregar"
+                                onclick='añadirAlCarrito({
+                                    id: <?= $producto->getPRODUCTO_ID() ?>,
+                                    nombre: "<?= addslashes($producto->getNOMBRE()) ?>",
+                                    precio: <?= $producto->getPRECIO() ?>
+                                })'>
+                                    <span class="texto-boton">Agregar</span>
                                 </button>
                             </div>
                             <div class="linea-amarilla"></div>
@@ -40,7 +36,7 @@
             <?php endforeach; ?>
         </div>
     </section>  
-    <section class="bg-black mb-5">
+    <section class="fondo-carrusel">
         <div class="titulo-menus">
             <h2>MENUS</h2> 
         </div>
@@ -83,7 +79,6 @@
             </button>
         </div>
     </section>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <section class="section-nosotros">
         <div class="titulo-nosotros">
             <h2>SOBRE NOSOTROS</h2>
@@ -132,5 +127,5 @@
 
         </div>
     </section>
-</body>
-</html>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</section>

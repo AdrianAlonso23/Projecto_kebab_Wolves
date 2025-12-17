@@ -14,8 +14,11 @@
         </div>
     </div>
     <?php include "view/" . $view; ?>
+    <?php include "view/carrito-lateral.php"; ?>
     <div>
         <?php include("footer.php")?>
     </div>
+    <script src="http://localhost/ejemplos/Proyecto_kebab/public/JS/carrito.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

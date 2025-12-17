@@ -10,5 +10,11 @@
             include "view/main.php";
         }
 
+        public function __construct() {
+            if (!isset($_SESSION['ROL']) || $_SESSION['ROL'] !== 'admin') {
+                header('Location: index.php');
+                exit;
+            }
+        }
     }
 ?>

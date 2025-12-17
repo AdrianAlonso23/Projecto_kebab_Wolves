@@ -22,8 +22,13 @@
                                 <h4 class="titulo-producto"><?=$producto->getNOMBRE()?></h4>
                                 <p class="descripcion-producto"><?=$producto->getDESCRIPCION()?></p>
                                 <p><strong><?=$producto->getPRECIO()?> €</strong></p>
-                                <button class="boton-agregar">
-                                    <a class="texto-boton" href="#">Agregar</a>
+                                <button class="boton-agregar"
+                                onclick='añadirAlCarrito({
+                                    id: <?= $producto->getPRODUCTO_ID() ?>,
+                                    nombre: "<?= addslashes($producto->getNOMBRE()) ?>",
+                                    precio: <?= $producto->getPRECIO() ?>
+                                })'>
+                                    <span class="texto-boton">Agregar</span>
                                 </button>
                             </div>
                             <div class="linea-amarilla"></div>
