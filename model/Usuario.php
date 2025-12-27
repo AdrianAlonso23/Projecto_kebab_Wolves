@@ -7,6 +7,8 @@
         private $TELEFONO;
         private $ROL;
 
+        public function __construcut() {}
+        
         public function getUSUARIO_ID() {
             return $this->USUARIO_ID;
         }

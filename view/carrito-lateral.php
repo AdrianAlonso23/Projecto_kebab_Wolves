@@ -6,5 +6,9 @@
     <div class="offcanvas-body">
         <div id="carritoContenido"></div>
     </div>
+    <div>
+        <div id="totalCarrito"></div>
+    </div>
+    <hr class="hr-carrito">
     <button class="boton-pagar">Pagar Ahora</button>
 </div>

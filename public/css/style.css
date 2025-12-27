@@ -822,10 +822,6 @@ textarea {
 }
 
 /************************** Panel Admin **************************/
-.section-admin {
-    display: none;
-    height: auto;
-}
 .nav-item-admin {
     list-style: none;
     color: #fff;
@@ -847,7 +843,26 @@ textarea {
     text-align: center;
     background-color: #fff;
     padding: 50px;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+    box-shadow: 5px 5px 18px rgba(0,0,0,0.3);
+}
+.div-usuarios{
+    display: flex;
+    flex-basis: 50% 40%;
+}
+#listaUsuarios  {
+    background-color: #fff;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.3);
+    list-style: none;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    padding: 10px;
+    text-decoration: none;
+}
+#listaUsuarios li{
+    margin-bottom: 25px;
+}
+.form-usuarios{
+    margin-right: 125px;
 }
 #listaCategorias li {
     background-color: #fff;
@@ -856,6 +871,7 @@ textarea {
     margin-bottom: 15px;
     border-radius: 5px;
     padding: 10px;
+    text-decoration: none;
 }
 /************************** Menu Carrito **************************/
 .carrito-lateral {
@@ -884,6 +900,19 @@ textarea {
     border-bottom: 1px solid #ddd;
     padding-bottom: 10px;
     margin-bottom: 10px;
+}
+#totalCarrito{
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 10px;
+    text-align: right;
+    margin-right: 20px;
+}
+.hr-carrito{
+    width: 90%; 
+    align-self: center;
+    height: 2px; 
+    background-color: black;
 }
 .boton-pagar{
     width: 100%;

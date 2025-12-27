@@ -37,54 +37,105 @@
             </ul>
         </div>
     </div>
-    <section class="section-admin  p-4 w-100">
+    <section id="dashboard"class="section-admin  p-4 w-100">
         <div class="dashboard">
             <h3>Bienvenido al panel de Adminitrador!</h3>
             <p>Desde aquí podrás gestionar los usuarios, productos, categorías y pedidos de la plataforma.</p>
         </div>
     </section>
-    <section class="section-admin  p-4 w-100 ">
-        <div id="UsuariosContainer" class="d-flex flex-wrap gap-3"></div>
+    <section id="usuarios" class="section-admin  p-4 w-100 ">
+        <h3>Usuarios</h3>
+        <table>
+            <th>
+                <td><span><strong>Nombre</span></strong></td>
+                <td><span><strong>Correo</span></strong></td>
+                <td><span><strong>Télefono</span></strong></td>
+                <td><span><strong>Rol</span></strong></td>
+            </th>
+        </table>
+        <div class="div-usuarios">
+            <div>
+               <ul id="listaUsuarios"></ul> 
+            </div>
+            <div class="form-usuarios">
+                <h3>Crear Usuario</h3>
+                <form action="">
+                    <label for="">dswsw</label>
+                    <input type="text">
+                </form>
+            </div>
+        </div>
+        <div>
+            <!-- Modal Editar Usuario -->
+            <div class="modal fade" id="modalEditarUsuario" tabindex="-1" aria-labelledby="modalEditarUsuarioLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalEditarUsuarioLabel">Editar Usuario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="editId">
+                        <div class="mb-2">
+                            <label>Nombre</label>
+                            <input type="text" id="editNombre" class="form-control">
+                        </div>
+                        <div class="mb-2">
+                            <label>Email</label>
+                            <input type="email" id="editCorreo" class="form-control">
+                        </div>
+                        <div class="mb-2">
+                            <label>Contraseña</label>
+                            <input type="password" id="editContrasena" class="form-control">
+                        </div>
+                        <div class="mb-2">
+                            <label>Telefono</label>
+                            <input type="tel" id="editTelefono" class="form-control">
+                        </div>
+                        <div class="mb-2">
+                            <label>Rol</label>
+                            <select id="editRol" class="form-control">
+                                <option value="admin">Admin</option>
+                                <option value="user">User</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" id="guardarUsuarioBtn">Guardar</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
-    <section class="section-admin  p-4 w-100 ">
+    <section id="pedidos"class="section-admin  p-4 w-100 ">
+        <h3>Pedidos</h3>
         <p>dwd</p>
     </section>
-    <section class="section-admin p-4 w-100">
+    <section id="productos"class="section-admin p-4 w-100">
         <h3>Productos</h3>
         <div id="productosContainer" class="d-flex flex-wrap gap-3"></div>
     </section>
-    <section class="section-admin  p-4 w-100">
-        <div>
+    <section id="categorias" class="section-admin  p-4 w-100">
             <h3>Categorías</h3>
             <ul id="listaCategorias"></ul>
-        </div>
     </section>
+
 </section>
 <script>
 
     const buttons = document.querySelectorAll('.nav-item-admin');
     const sections = document.querySelectorAll('.section-admin');
 
+    const sectionIds = ['dashboard', 'usuarios', 'pedidos', 'productos', 'categorias'];
     buttons.forEach((button, index) => {
-
         button.addEventListener('click', () => {
-            sections.forEach((section, secIndex) => {
-                if (index === secIndex) {
-                    section.style.display = 'block';
-                } else {
-                    section.style.display = 'none';
-                }
-
-            });
-            buttons.forEach((btn, btnIndex) => {
-                if (index === btnIndex) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
+            sectionIds.forEach(id => document.getElementById(id).style.display = 'none');
+            document.getElementById(sectionIds[index]).style.display = 'block';
         });
     });
+
 
 </script>
 <script src="public/JS/productos.js"></script>

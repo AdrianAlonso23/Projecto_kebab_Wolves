@@ -59,5 +59,64 @@ require_once 'model/Usuario.php';
 
             return $usuarios;
         }
+
+        public static function getUsuarioById($id) {
+            $con = database::connect();
+            $stmt = $con->prepare("SELECT * FROM usuarios WHERE USUARIO_ID = ?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($row = $result->fetch_assoc()) {
+                $usuario = new Usuario();
+                $usuario->setUSUARIO_ID($row['USUARIO_ID']);
+                $usuario->setNOMBRE($row['NOMBRE']);
+                $usuario->setCORREO($row['CORREO']);
+                $usuario->setCONTRASENA($row['CONTRASENA']);
+                $usuario->setTELEFONO($row['TELEFONO']);
+                $usuario->setROL($row['ROL']);
+                return $usuario;
+            }
+
+            return null;
+        }
+
+        public static function updateUsuario($usuario) {
+            $con = database::connect();
+            $sql = "UPDATE usuarios 
+                    SET NOMBRE = ?, CORREO = ?, CONTRASENA = ?, TELEFONO = ?, ROL = ?
+                    WHERE USUARIO_ID = ?";
+
+            $stmt = $con->prepare($sql);
+            if (!$stmt) {
+                error_log("Error prepare: " . $con->error);
+                return false;
+            }
+
+            
+            $nombre = $usuario->getNOMBRE() ?? '';
+            $correo = $usuario->getCORREO() ?? '';
+            $contrasena = $usuario->getCONTRASENA() ?? '';
+            $telefono = $usuario->getTELEFONO() ?? '';
+            $rol = $usuario->getROL() ?? '';
+            $id = $usuario->getUSUARIO_ID();
+
+            $stmt->bind_param(
+                "sssssi",
+                $nombre,
+                $correo,
+                $contrasena,
+                $telefono,
+                $rol,
+                $id
+            );
+
+            if (!$stmt->execute()) {
+                error_log("Error execute: " . $stmt->error);
+                return false;
+            }
+
+            return ['success' => true];
+        }
     }
 ?>

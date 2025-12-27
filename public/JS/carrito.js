@@ -27,14 +27,18 @@ function actualizarCarritoUI() {
     const carrito = obtenerCarrito();
     const cont = document.getElementById('carritoContenido');
     const contador = document.getElementById('contadorCarrito');
+    const totalDiv = document.getElementById('totalCarrito');
 
-    if (!cont || !contador) return;
+    if (!cont || !contador || !totalDiv) return;
 
     cont.innerHTML = '';
     let totalCantidad = 0;
+    let totalPrecio = 0;
 
     carrito.forEach(p => {
         totalCantidad += p.cantidad;
+        totalPrecio += p.precio * p.cantidad;
+
         cont.innerHTML += `
             <div class="d-flex justify-content-between mb-2">
                 <span>${p.nombre} x${p.cantidad}</span>
@@ -44,6 +48,10 @@ function actualizarCarritoUI() {
     });
 
     contador.textContent = totalCantidad;
+
+    totalDiv.innerHTML = `
+        <strong>Total: ${totalPrecio.toFixed(2)} €</strong>
+    `;
 }
 
 // Inicialización cuando carga la página
