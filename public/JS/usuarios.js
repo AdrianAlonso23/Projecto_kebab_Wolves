@@ -30,11 +30,23 @@ function cargarUsuarios() {
     fetch('?controller=Api&action=getUsuarios')
         .then(res => res.json())
         .then(data => {
-            usuariosGlobal = data; // Guardamos globalmente para poder editar
-            mostrarUsuarios(data);
+            const usuarios = data.map(u => new Usuario(
+                u.USUARIO_ID,
+                u.NOMBRE,
+                u.CORREO,
+                u.TELEFONO,
+                u.ROL
+            ));
+
+            usuariosGlobal = usuarios;
+
+            mostrarUsuarios(usuarios);
+
+            usuarios.forEach(u => console.log('Usuario:', u));
         })
         .catch(err => console.error('Error al cargar usuarios:', err));
 }
+
 
 // Mostrar usuarios en pantalla
 function mostrarUsuarios(usuarios) {
@@ -42,24 +54,29 @@ function mostrarUsuarios(usuarios) {
     lista.innerHTML = '';
 
     usuarios.forEach(u => {
-        const li = document.createElement('li');
-        li.className = 'list-group-item d-flex align-items-center';
+        const tr = document.createElement('tr');
 
-        li.innerHTML = `
-            <div class="d-flex gap-4">
-                <span>${u.NOMBRE}</span>
-                <span>${u.CORREO}</span>
-                <span>${u.TELEFONO}</span>
-                <span>${u.ROL}</span>
-                <button class="btn btn-warning btn-sm me-2" onclick="abrirModal(${u.USUARIO_ID})">Editar</button>
-                <button class="btn btn-danger btn-sm" onclick="eliminarUsuario(${u.USUARIO_ID})">Eliminar</button>
-            </div>
+        tr.innerHTML = `
+            <td>${u.USUARIO_ID}</td>
+            <td>${u.NOMBRE}</td>
+            <td>${u.CORREO}</td>
+            <td>${u.TELEFONO}</td>
+            <td>${u.ROL}</td>
+            <td>
+                <button class="btn btn-warning btn-sm me-2"
+                        onclick="abrirModal(${u.USUARIO_ID})">
+                    Editar
+                </button>
+                <button class="btn btn-danger btn-sm"
+                        onclick="eliminarUsuario(${u.USUARIO_ID})">
+                    Eliminar
+                </button>
+            </td>
         `;
 
-        lista.appendChild(li);
+        lista.appendChild(tr);
     });
 }
-
 
 // Abrir modal de edición
 function abrirModal(id) {
@@ -76,7 +93,7 @@ function abrirModal(id) {
     modalEditarUsuario.show();
 }
 
-// Guardar cambios de edición (PUT)
+// Guardar cambios de edición 
 function guardarEdicion() {
     const usuario = {
         USUARIO_ID: parseInt(document.getElementById('editId').value),
@@ -108,14 +125,43 @@ function guardarEdicion() {
     });
 }
 // Crear Usuario 
+function crearUsuario() {
+    const usuario = {
+        NOMBRE: document.getElementById('crearNombre').value,
+        CORREO: document.getElementById('crearCorreo').value,
+        CONTRASENA: document.getElementById('crearContrasena').value,
+        TELEFONO: document.getElementById('crearTelefono').value,
+        ROL: document.getElementById('crearRol').value
+    };
 
-
+    fetch('http://localhost/ejemplos/Proyecto_kebab/index.php?controller=Api&action=createUsuario', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify(usuario)
+    })
+    .then(res => res.json())
+    .then(resp => {
+        if (resp.success) {
+            alert('Usuario creado correctamente');
+            document.getElementById('formCrearUsuario').reset();
+            cargarUsuarios();
+        } else {
+            alert(resp.error || 'Error al crear usuario');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Error al crear usuario');
+    });
+}
 
 // Eliminar usuario (DELETE)
 function eliminarUsuario(id) {
     if (!confirm('¿Seguro que quieres eliminar este usuario?')) return;
 
-    fetch(`?controller=Api&action=deleteUsuario&id=${id}`, {
+    fetch(`http://localhost/ejemplos/Proyecto_kebab/index.php?controller=Api&action=deleteUsuario&id=${id}`, {
         method: 'DELETE'
     })
     .then(res => res.json())
@@ -126,10 +172,9 @@ function eliminarUsuario(id) {
         } else {
             alert(resp.error || 'Error al eliminar usuario');
         }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Error al eliminar usuario');
     });
-}
-
-// Cancelar edición
-function cancelarEdicion() {
-    modalEditarUsuario.hide();
 }

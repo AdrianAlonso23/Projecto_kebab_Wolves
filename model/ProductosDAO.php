@@ -56,4 +56,94 @@ class ProductosDAO {
 
         return $productos;
     }
+
+    // En ProductosDAO.php
+    public static function updateProducto($producto) {
+        $con = Database::connect();
+
+        $sql = "UPDATE productos 
+                SET NOMBRE = ?, DESCRIPCION = ?, PRECIO = ?, CATEGORIA_ID = ?, IMAGEN = ?
+                WHERE PRODUCTO_ID = ?";
+
+        $stmt = $con->prepare($sql);
+        if (!$stmt) {
+            return [
+                'success' => false,
+                'error' => $con->error
+            ];
+        }
+
+        $nombre = $producto->getNOMBRE();
+        $descripcion = $producto->getDESCRIPCION();
+        $precio = $producto->getPRECIO();
+        $categoria = $producto->getCATEGORIA_ID();
+        $imagen = $producto->getIMAGEN();
+        $id = $producto->getPRODUCTO_ID();
+
+        $stmt->bind_param("ssdssi", $nombre, $descripcion, $precio, $categoria, $imagen, $id);
+
+        if (!$stmt->execute()) {
+            return [
+                'success' => false,
+                'error' => $stmt->error
+            ];
+        }
+
+        return ['success' => true];
+    }
+
+    public static function createProducto($producto) {
+        $con = Database::connect();
+
+        $sql = "INSERT INTO productos (NOMBRE, DESCRIPCION, PRECIO, CATEGORIA_ID, IMAGEN)
+                VALUES (?, ?, ?, ?, ?)";
+
+        $stmt = $con->prepare($sql);
+        if (!$stmt) {
+            return [
+                'success' => false,
+                'error' => $con->error
+            ];
+        }
+
+        $nombre = $producto->getNOMBRE();
+        $descripcion = $producto->getDESCRIPCION();
+        $precio = $producto->getPRECIO();
+        $categoria = $producto->getCATEGORIA_ID();
+        $imagen = $producto->getIMAGEN();
+
+        $stmt->bind_param("ssdss", $nombre, $descripcion, $precio, $categoria, $imagen);
+
+        if (!$stmt->execute()) {
+            return [
+                'success' => false,
+                'error' => $stmt->error
+            ];
+        }
+
+        return ['success' => true];
+    }
+
+    public static function deleteProducto($id) {
+        $con = Database::connect();
+
+        $sql = "DELETE FROM productos WHERE PRODUCTO_ID = ?";
+        $stmt = $con->prepare($sql);
+
+        if (!$stmt) {
+            return ['success' => false, 'error' => $con->error];
+        }
+
+        $stmt->bind_param("i", $id);
+
+        if (!$stmt->execute()) {
+            return ['success' => false, 'error' => $stmt->error];
+        }
+
+        $stmt->close();
+        $con->close();
+
+        return ['success' => true];
+    }
+
 }

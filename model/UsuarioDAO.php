@@ -96,7 +96,7 @@ require_once 'model/Usuario.php';
             
             $nombre = $usuario->getNOMBRE() ?? '';
             $correo = $usuario->getCORREO() ?? '';
-            $contrasena = $usuario->getCONTRASENA() ?? '';
+            $contrasena = password_hash($usuario->getCONTRASENA(), PASSWORD_DEFAULT) ?? '';
             $telefono = $usuario->getTELEFONO() ?? '';
             $rol = $usuario->getROL() ?? '';
             $id = $usuario->getUSUARIO_ID();
@@ -117,6 +117,64 @@ require_once 'model/Usuario.php';
             }
 
             return ['success' => true];
+        }
+
+        public static function createUsuario($usuario) {
+            $con = database::connect();
+
+            $sql = "INSERT INTO usuarios (NOMBRE, CORREO, CONTRASENA, TELEFONO, ROL)
+                    VALUES (?, ?, ?, ?, ?)";
+    
+            $stmt = $con->prepare($sql);
+            if (!$stmt) {
+                return [
+                    'success' => false,
+                    'error' => $con->error
+                ];
+            }
+
+            $nombre = $usuario->getNOMBRE();
+            $correo = $usuario->getCORREO();
+            $contrasena = password_hash($usuario->getCONTRASENA(), PASSWORD_DEFAULT);
+            $telefono = $usuario->getTELEFONO();
+            $rol = $usuario->getROL();
+
+            $stmt->bind_param(
+                "sssss",
+                $nombre,
+                $correo,
+                $contrasena,
+                $telefono,
+                $rol
+            );
+
+            if (!$stmt->execute()) {
+                return [
+                    'success' => false,
+                    'error' => $stmt->error
+                ];
+            }
+
+            return ['success' => true];
+        }
+
+        public static function deleteUsuario($id) {
+            $con = database::connect();
+            $stmt = $con->prepare("DELETE FROM usuarios WHERE USUARIO_ID = ?");
+            if (!$stmt) {
+                return ['success' => false, 'error' => $con->error];
+            }
+
+            $stmt->bind_param("i", $id);
+
+            if (!$stmt->execute()) {
+                return ['success' => false, 'error' => $stmt->error];
+            }
+
+            $stmt->close();
+            $con->close();
+
+            return ['success' => true];  // <-- importante que devuelva un array con success
         }
     }
 ?>

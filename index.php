@@ -6,6 +6,8 @@
     include_once "controller/RegistroController.php";
     include_once "controller/ContactoController.php";
     include_once "controller/AdminController.php";
+    include_once "controller/CarritoController.php";
+
 
     if(session_status() == PHP_SESSION_NONE){
         session_start();
@@ -25,8 +27,5 @@
                 echo "Acción no encontrada";
             }
         }
-    } else {
-        $controller = new HomeController();
-        $controller->index();    
     }
 ?>

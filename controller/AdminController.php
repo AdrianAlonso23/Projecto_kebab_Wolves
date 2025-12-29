@@ -2,6 +2,7 @@
     include_once "model/ProductosDAO.php";
     include_once "model/CategoriasDAO.php";
     include_once "model/UsuarioDAO.php";
+    include_once "model/PedidosDAO.php";
 
     class AdminController {
 

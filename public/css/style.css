@@ -1,7 +1,9 @@
 *{
     margin: 0;
     font-family: 'Albert Sans', sans-serif;
+
 }
+
 /******************************* Primer Nav ******************************/
 .menu{ 
     align-items: center;
@@ -545,10 +547,11 @@
 }
 
 .formulario-contacto {
-    background-color: #000;
+    background-color: #fff;
     padding: 40px;
     width: 45%;
-    box-shadow: 0 0 20px rgba(253, 185, 19, 0.2);
+    border: solid 1px #FDB913 ;
+    
 }
 
 form {
@@ -563,17 +566,13 @@ label {
 }
 
 input, textarea {
-    background-color: #000;
+    background-color: #fff;
     border: 2px solid #FDB913;
-    color: #fff;
+    color: #000;
     padding: 12px;
     font-size: 1rem;
 }
 
-input:focus, textarea:focus {
-    outline: none;
-    border-color: #fff;
-}
 
 textarea {
     resize: none;
@@ -679,16 +678,19 @@ textarea {
     align-items: center;
     padding-left: 10px;
     transition: 0.2s ease-in-out;
+    background-color: #000;
 }
 
-.input {
+.input-login {
     margin-left: 10px;
     border: none;
     width: 100%;
     height: 100%;
+    background-color: #000;
+    color: #fff;
 }
 
-.input:focus {
+.input-login:focus {
     outline: none;
 }
 
@@ -822,6 +824,10 @@ textarea {
 }
 
 /************************** Panel Admin **************************/
+.section-admin {
+    display: none;
+    height: auto;
+}
 .nav-item-admin {
     list-style: none;
     color: #fff;
@@ -846,8 +852,8 @@ textarea {
     box-shadow: 5px 5px 18px rgba(0,0,0,0.3);
 }
 .div-usuarios{
+    justify-content: space-between;
     display: flex;
-    flex-basis: 50% 40%;
 }
 #listaUsuarios  {
     background-color: #fff;
@@ -856,13 +862,78 @@ textarea {
     margin-bottom: 15px;
     border-radius: 5px;
     padding: 10px;
-    text-decoration: none;
 }
 #listaUsuarios li{
     margin-bottom: 25px;
+    width: 750px;
 }
 .form-usuarios{
-    margin-right: 125px;
+    background-color: #fff;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.3);
+    padding: 35px;
+    color: #000;
+}
+.label-usuarios{
+    color: #FDB913;
+}
+.input-usuarios{
+    background-color: #fff;
+    border-color: #ddd;
+    height: 35px;
+    color: #000;
+}
+.boton-usuarios{
+    background-color: #FDB913;
+    padding: 10px;
+    border: none;
+    font-weight: bold;
+}
+/* GRID DE PRODUCTOS */
+.productos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: 1rem;
+}
+
+/* TODAS LAS CARDS MISMO TAMAÑO */
+.productos-grid .card {
+    height: 100%;
+}
+
+/* CARD AGREGAR PRODUCTO */
+.card-add-product {
+    min-height: 420px; /* MISMA ALTURA QUE TUS CARDS */
+    border: 2px dashed #ccc;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 300px;
+}
+
+.card-add-product:hover {
+    border-color: #ffc107;
+    background-color: #fffbe6;
+}
+
+/* CONTENIDO CENTRADO */
+.card-add-content {
+    text-align: center;
+}
+
+.add-icon {
+    font-size: 80px;
+    font-weight: bold;
+    color: #ffc107;
+    line-height: 1;
+}
+
+.boton-modal-productos{
+    background-color: #FDB913;
+    border-radius: none;
+    border: none;
+    padding: 10px;
 }
 #listaCategorias li {
     background-color: #fff;
@@ -881,7 +952,7 @@ textarea {
     width: 360px;
     height: 100vh;
     background: #fff;
-    box-shadow: -2px 0 15px rgba(0,0,0,0.25);
+    box-shadow: 5px 0 15px rgba(0,0,0,0.25);
     transition: right 0.3s ease;
     z-index: 9999;
     padding: 15px;

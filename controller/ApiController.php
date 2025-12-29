@@ -1,22 +1,30 @@
 <?php
-
     require_once "model/CategoriasDAO.php";
     require_once "model/UsuarioDAO.php";
     require_once "model/ProductosDAO.php";
+    require_once "model/Productos.php";
+    require_once "model/Usuario.php";
+    require_once "model/PedidosDAO.php";
+    require_once "model/Pedidos.php";
     
 
     class ApiController{
 
         public function getCategorias() {
-            $categorias = CategoriasDAO::getCategorias();
+            $categoria = CategoriasDAO::getCategorias();
+
             header('Content-Type: application/json; charset=utf-8');
-            $categorias = CategoriasDAO::getCategorias();
+
             $data = [];
-            foreach ($categorias as $categoria) {
-                $data[] = $categoria->toArray();
+            foreach ($categoria as $c) {
+                $data[] = $c->toArray();
             }
+
             echo json_encode($data);
+            exit;
         }
+
+        /*********************************************USUARIOS*************************************************************/
 
         public function getUsuarios() {
             $usuarios = UsuarioDAO::getUsuarios();
@@ -73,7 +81,7 @@
                 exit;
             }
 
-            // ✅ Aquí validamos los campos usando el operador ?? para evitar notices
+            // validamos los campos usando el operador ?? para evitar notices
             $id = $data['USUARIO_ID'] ?? null;
             $nombre = $data['NOMBRE'] ?? '';
             $correo = $data['CORREO'] ?? '';
@@ -108,31 +116,95 @@
             exit;
         }
 
+        public function createUsuario() {
+            header('Content-Type: application/json; charset=utf-8');
+
+            $method = $_SERVER['REQUEST_METHOD'];
+            if ($method !== 'PUT' && $method !== 'POST') {
+                http_response_code(405);
+                echo json_encode(['success' => false, 'error' => 'Método no permitido']);
+                exit;
+            }
+
+            // Leer JSON crudo
+            $raw = file_get_contents("php://input");
+            $data = json_decode($raw, true);
+
+            if (!$data) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => 'JSON inválido']);
+                exit;
+            }
+
+            // Validar campos
+            $nombre = $data['NOMBRE'] ?? '';
+            $correo = $data['CORREO'] ?? '';
+            $contrasena = $data['CONTRASENA'] ?? '';
+            $telefono = $data['TELEFONO'] ?? '';
+            $rol = $data['ROL'] ?? '';
+
+            if (!$nombre || !$correo || !$contrasena) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => 'Faltan campos obligatorios']);
+                exit;
+            }
+
+            // Crear objeto usuario
+            $usuario = new Usuario();
+            $usuario->setNOMBRE($nombre);
+            $usuario->setCORREO($correo);
+            $usuario->setCONTRASENA($contrasena);
+            $usuario->setTELEFONO($telefono);
+            $usuario->setROL($rol);
+
+            // Insertar usando DAO
+            $ok = UsuarioDAO::createUsuario($usuario);
+
+            if ($ok['success'] ?? false) {
+                echo json_encode(['success' => true]);
+            } else {
+                http_response_code(500);
+                echo json_encode([
+                    'success' => false,
+                    'error' => $ok['error'] ?? 'No se pudo crear el usuario'
+                ]);
+            }
+
+            exit;
+        }
+
+
         // Eliminar un usuario (DELETE)
         public function deleteUsuario() {
             header('Content-Type: application/json; charset=utf-8');
 
-            // Solo aceptar DELETE
             if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
-                echo json_encode(['error' => 'Método no permitido']);
+                http_response_code(405);
+                echo json_encode(['success' => false, 'error' => 'Método no permitido']);
                 exit;
             }
 
             $id = $_GET['id'] ?? null;
+
             if (!$id) {
-                echo json_encode(['error' => 'ID no recibido']);
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => 'ID no recibido']);
                 exit;
             }
 
-            $ok = UsuariosDAO::deleteUsuario($id);
+            $ok = UsuarioDAO::deleteUsuario($id);
 
-            if ($ok) {
+            if ($ok['success'] ?? false) {
                 echo json_encode(['success' => true]);
             } else {
-                echo json_encode(['error' => 'No se pudo eliminar']);
+                http_response_code(500);
+                echo json_encode(['success' => false, 'error' => $ok['error'] ?? 'No se pudo eliminar el usuario']);
             }
+
             exit;
         }
+
+        /*********************************************PRODUCTOS*************************************************************/
 
         public function getProductos() {
             $productos = ProductosDAO::getProductos();
@@ -147,6 +219,210 @@
             echo json_encode($data);
             exit;
         }
+
+        public function updateProducto() {
+            header('Content-Type: application/json; charset=utf-8');
+
+            $method = $_SERVER['REQUEST_METHOD'];
+            if ($method !== 'PUT' && $method !== 'POST') {
+                http_response_code(405);
+                echo json_encode(['success' => false, 'error' => 'Método no permitido']);
+                exit;
+            }
+
+            $raw = file_get_contents("php://input");
+            $data = json_decode($raw, true);
+
+            if (!$data) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => 'JSON inválido']);
+                exit;
+            }
+
+            $id = $data['PRODUCTO_ID'] ?? null;
+            $nombre = $data['NOMBRE'] ?? '';
+            $descripcion = $data['DESCRIPCION'] ?? '';
+            $precio = $data['PRECIO'] ?? 0;
+            $categoria = $data['CATEGORIA_ID'] ?? 0;
+            $imagen = $data['IMAGEN'] ?? '';
+
+            if (!$id || !$nombre) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => 'Faltan campos obligatorios']);
+                exit;
+            }
+
+            $producto = new Productos();
+            $producto->setPRODUCTO_ID($id);
+            $producto->setNOMBRE($nombre);
+            $producto->setDESCRIPCION($descripcion);
+            $producto->setPRECIO($precio);
+            $producto->setCATEGORIA_ID($categoria);
+            $producto->setIMAGEN($imagen);
+
+            $ok = ProductosDAO::updateProducto($producto);
+
+            if ($ok['success'] ?? false) {
+                echo json_encode(['success' => true]);
+            } else {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'error' => $ok['error'] ?? 'No se pudo actualizar el producto']);
+            }
+
+            exit;
+        }
+
+        public function createProducto() {
+            header('Content-Type: application/json; charset=utf-8');
+
+            $method = $_SERVER['REQUEST_METHOD'];
+            if ($method !== 'PUT' && $method !== 'POST') {
+                http_response_code(405);
+                echo json_encode(['success' => false, 'error' => 'Método no permitido']);
+                exit;
+            }
+
+            // Leer JSON crudo
+            $raw = file_get_contents("php://input");
+            $data = json_decode($raw, true);
+
+            if (!$data) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => 'JSON inválido']);
+                exit;
+            }
+
+            // Validar campos
+            $nombre = $data['NOMBRE'] ?? '';
+            $descripcion = $data['DESCRIPCION'] ?? '';
+            $precio = $data['PRECIO'] ?? 0;
+            $categoria = $data['CATEGORIA_ID'] ?? 0;
+            $imagen = $data['IMAGEN'] ?? '';
+
+            if (!$nombre || !$descripcion || !$precio || !$categoria) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => 'Faltan campos obligatorios']);
+                exit;
+            }
+
+            // Crear objeto producto
+            $producto = new Productos();
+            $producto->setNOMBRE($nombre);
+            $producto->setDESCRIPCION($descripcion);
+            $producto->setPRECIO($precio);
+            $producto->setCATEGORIA_ID($categoria);
+            $producto->setIMAGEN($imagen);
+
+            // Insertar usando DAO
+            $ok = ProductosDAO::createProducto($producto);
+
+            if ($ok['success'] ?? false) {
+                echo json_encode(['success' => true]);
+            } else {
+                http_response_code(500);
+                echo json_encode([
+                    'success' => false,
+                    'error' => $ok['error'] ?? 'No se pudo crear el producto'
+                ]);
+            }
+
+            exit;
+        }
+
+        public function deleteProducto() {
+            header('Content-Type: application/json; charset=utf-8');
+
+            if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+                http_response_code(405);
+                echo json_encode(['success' => false, 'error' => 'Método no permitido']);
+                exit;
+            }
+
+            $id = $_GET['id'] ?? null;
+
+            if (!$id) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => 'ID no recibido']);
+                exit;
+            }
+
+            $ok = ProductosDAO::deleteProducto($id);
+
+            if ($ok['success'] ?? false) {
+                echo json_encode(['success' => true]);
+            } else {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'error' => $ok['error'] ?? 'No se pudo eliminar el producto']);
+            }
+
+            exit;
+        }
+
+        /*********************************************PEDIDOS*************************************************************/
+
+        public function getPedidos() {
+            header('Content-Type: application/json; charset=utf-8');
+
+            $pedidos = PedidosDAO::getPedidos();
+            $data = [];
+
+            foreach ($pedidos as $p) {
+                $data[] = $p->toArray();
+            }
+
+            echo json_encode($data);
+            exit;
+        }
+
+
+        public function createPedido() {
+            header('Content-Type: application/json; charset=utf-8');
+
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                echo json_encode(['success' => false, 'error' => 'Método no permitido']);
+                exit;
+            }
+
+            $raw = file_get_contents("php://input");
+            $data = json_decode($raw, true);
+
+            if (!$data) {
+                echo json_encode(['success' => false, 'error' => 'JSON inválido']);
+                exit;
+            }
+
+            $pedido = new Pedidos();
+            $pedido->setUSUARIO_ID($data['USUARIO_ID']);
+            $pedido->setFECHA($data['FECHA']);
+            $pedido->setTOTAL($data['TOTAL']);
+            $pedido->setDIRECCION($data['DIRECCION']);
+
+            $ok = PedidosDAO::createPedido($pedido);
+
+            echo json_encode($ok);
+            exit;
+        }
+
+        public function deletePedido() {
+            header('Content-Type: application/json; charset=utf-8');
+
+            if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+                echo json_encode(['success' => false, 'error' => 'Método no permitido']);
+                exit;
+            }
+
+            $id = $_GET['id'] ?? null;
+
+            if (!$id) {
+                echo json_encode(['success' => false, 'error' => 'ID no recibido']);
+                exit;
+            }
+
+            $ok = PedidosDAO::deletePedido($id);
+            echo json_encode($ok);
+            exit;
+        }
+
 
     }
 

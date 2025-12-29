@@ -45,77 +45,77 @@
     </section>
     <section id="usuarios" class="section-admin  p-4 w-100 ">
         <h3>Usuarios</h3>
-        <table>
-            <th>
-                <td><span><strong>Nombre</span></strong></td>
-                <td><span><strong>Correo</span></strong></td>
-                <td><span><strong>Télefono</span></strong></td>
-                <td><span><strong>Rol</span></strong></td>
-            </th>
-        </table>
-        <div class="div-usuarios">
-            <div>
-               <ul id="listaUsuarios"></ul> 
+        <div class="d-flex gap-5 w-100">
+            <div class="table-container">
+                <table class="table table-striped text-center align-items-center align-middle">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Teléfono</th>
+                            <th>Rol</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaUsuarios"></tbody>
+                </table>
             </div>
             <div class="form-usuarios">
                 <h3>Crear Usuario</h3>
-                <form action="">
-                    <label for="">dswsw</label>
-                    <input type="text">
+                <form id="formCrearUsuario" onsubmit="event.preventDefault(); crearUsuario();">
+                    <label class="label-usuarios" for="crearNombre">Nombre</label>
+                    <input class="input-usuarios" id="crearNombre" type="text" placeholder="Nombre" required>
+                    <label class="label-usuarios" for="crearCorreo">Correo</label>
+                    <input class="input-usuarios" id="crearCorreo" type="email" placeholder="Correo" required>
+                    <label class="label-usuarios" for="crearContrasena">Contraseña</label>
+                    <input class="input-usuarios" id="crearContrasena" type="password" placeholder="Contraseña" required>
+                    <label class="label-usuarios" for="crearTelefono">Teléfono</label>
+                    <input class="input-usuarios" id="crearTelefono" type="text" placeholder="Teléfono">
+                    
+                    <label class="label-usuarios" for="crearRol">Rol</label>
+                    <select id="crearRol" required>
+                        <option value="">-</option>
+                        <option value="admin">admin</option>
+                        <option value="usuario">user</option>
+                    </select>
+
+                    <button class="boton-usuarios" type="submit">Crear usuario</button>
                 </form>
-            </div>
-        </div>
-        <div>
-            <!-- Modal Editar Usuario -->
-            <div class="modal fade" id="modalEditarUsuario" tabindex="-1" aria-labelledby="modalEditarUsuarioLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalEditarUsuarioLabel">Editar Usuario</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" id="editId">
-                        <div class="mb-2">
-                            <label>Nombre</label>
-                            <input type="text" id="editNombre" class="form-control">
-                        </div>
-                        <div class="mb-2">
-                            <label>Email</label>
-                            <input type="email" id="editCorreo" class="form-control">
-                        </div>
-                        <div class="mb-2">
-                            <label>Contraseña</label>
-                            <input type="password" id="editContrasena" class="form-control">
-                        </div>
-                        <div class="mb-2">
-                            <label>Telefono</label>
-                            <input type="tel" id="editTelefono" class="form-control">
-                        </div>
-                        <div class="mb-2">
-                            <label>Rol</label>
-                            <select id="editRol" class="form-control">
-                                <option value="admin">Admin</option>
-                                <option value="user">User</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-success" id="guardarUsuarioBtn">Guardar</button>
-                    </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
     <section id="pedidos"class="section-admin  p-4 w-100 ">
         <h3>Pedidos</h3>
-        <p>dwd</p>
+        <table class="table table-striped text-center">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuario</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Dirección</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="listaPedidos"></tbody>
+        </table>
     </section>
     <section id="productos"class="section-admin p-4 w-100">
         <h3>Productos</h3>
-        <div id="productosContainer" class="d-flex flex-wrap gap-3"></div>
+        <div id="productosContainer" class="d-flex flex-wrap gap-3">
+            <div>
+                <div class="card card-add-product h-100 d-flex align-items-center justify-content-center"
+                    onclick="abrirModalAgregarProducto()">
+
+                    <div class="text-center">
+                        <span class="add-icon">+</span>
+                        <p class="mt-2">Agregar producto</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </section>
     <section id="categorias" class="section-admin  p-4 w-100">
             <h3>Categorías</h3>
@@ -123,6 +123,146 @@
     </section>
 
 </section>
+<div>
+    <!-- Modal Editar Usuario -->
+    <div class="modal fade" id="modalEditarUsuario" tabindex="-1" aria-labelledby="modalEditarUsuarioLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditarUsuarioLabel">Editar Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editId">
+                    <div class="mb-2">
+                        <label>Nombre</label>
+                        <input type="text" id="editNombre" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label>Email</label>
+                        <input type="email" id="editCorreo" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label>Contraseña</label>
+                        <input type="password" id="editContrasena" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label>Telefono</label>
+                        <input type="tel" id="editTelefono" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label>Rol</label>
+                        <select id="editRol" class="form-control">
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="guardarUsuarioBtn">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Agregar Producto -->
+<div class="modal fade" id="modalCrearProducto" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <form id="formCrearProducto" onsubmit="crearProducto(event)">
+        <div class="modal-header">
+          <h5 class="modal-title">Agregar Producto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="crearProductoNombre" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Descripción</label>
+            <textarea class="form-control" id="crearProductoDescripcion" required></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Precio</label>
+            <input type="number" step="0.01" class="form-control" id="crearProductoPrecio" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Categoría</label>
+            <input type="number" class="form-control" id="crearProductoCategoria" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Imagen</label>
+            <input type="text" class="form-control" id="crearProductoImagen">
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="boton-modal-productos" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="boton-modal-productos">Crear producto</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal Editar Producto -->
+<div class="modal fade" id="modalEditarProducto" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <form id="formEditarProducto" onsubmit="guardarEdicionProducto(event)">
+            <div class="modal-header">
+            <h5 class="modal-title">Editar Producto</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+            <input type="hidden" id="editProductoId">
+
+            <div class="mb-3">
+                <label for="editProductoNombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="editProductoNombre" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="editProductoDescripcion" class="form-label">Descripción</label>
+                <textarea class="form-control" id="editProductoDescripcion" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="editProductoPrecio" class="form-label">Precio</label>
+                <input type="number" step="0.01" class="form-control" id="editProductoPrecio" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="editProductoCategoria" class="form-label">Categoría</label>
+                <input type="number" class="form-control" id="editProductoCategoria" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="editProductoImagen" class="form-label">Imagen</label>
+                <input type="text" class="form-control" id="editProductoImagen">
+            </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="boton-modal-productos" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="boton-modal-productos">Guardar cambios</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
 <script>
 
     const buttons = document.querySelectorAll('.nav-item-admin');
