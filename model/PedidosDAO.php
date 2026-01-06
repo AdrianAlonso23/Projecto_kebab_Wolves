@@ -19,6 +19,9 @@ class PedidosDAO {
             $pedido->setFECHA($row['FECHA']);
             $pedido->setTOTAL($row['TOTAL']);
             $pedido->setDIRECCION($row['DIRECCION']);
+            $pedido->setTELEFONO($row['TELEFONO']);
+            $pedido->setCODIGO_POSTAL($row['CODIGO_POSTAL']);
+            $pedido->setESTADO($row['ESTADO']);
 
             $pedidos[] = $pedido;
         }
@@ -27,31 +30,45 @@ class PedidosDAO {
     }
 
     // Crear pedido
-    public static function createPedido($pedido) {
+    public static function createPedido(Pedidos $pedido) {
         $con = Database::connect();
 
-        $sql = "INSERT INTO pedidos (USUARIO_ID, FECHA, TOTAL, DIRECCION)
-                VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO pedidos (USUARIO_ID, FECHA, TOTAL, DIRECCION, TELEFONO, ESTADO)
+                VALUES (?, ?, ?, ?, ?, ?)";
 
         $stmt = $con->prepare($sql);
         if (!$stmt) {
             return ['success' => false, 'error' => $con->error];
         }
 
+        $usuarioId  = $pedido->getUSUARIO_ID();
+        $fecha      = $pedido->getFECHA();
+        $total      = $pedido->getTOTAL();
+        $direccion  = $pedido->getDIRECCION();
+        $telefono   = $pedido->getTELEFONO();
+        $estado     = $pedido->getESTADO();
+
+
         $stmt->bind_param(
-            "isds",
-            $pedido->getUSUARIO_ID(),
-            $pedido->getFECHA(),
-            $pedido->getTOTAL(),
-            $pedido->getDIRECCION()
+            "isdsss",  
+            $usuarioId,
+            $fecha,
+            $total,
+            $direccion,
+            $telefono,
+            $estado
         );
 
         if (!$stmt->execute()) {
             return ['success' => false, 'error' => $stmt->error];
         }
 
-        return ['success' => true];
+        // Obtener el ID del pedido recién creado
+        $pedidoId = $stmt->insert_id;
+
+        return ['success' => true, 'pedido_id' => $pedidoId];
     }
+
 
     // Eliminar pedido
     public static function deletePedido($id) {

@@ -1,13 +1,3 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contacto</title>
-    <link rel="stylesheet" href="../public/css/style.css">
-
-</head>
-<body>
     <section>
         <div class="titulo-contacto">
             <h1>CONTÁCTANOS</h1>
@@ -62,17 +52,17 @@
                 </div>
             </div>
             <div class="formulario-contacto">
-                <form>
-                    <label>Nombre</label>
-                    <input type="text" placeholder="Tu nombre" required>
+                <form class ="form-contacto">
+                    <label class="label-contacto">Nombre</label>
+                    <input class="input-contacto" type="text" placeholder="Tu nombre" required>
 
-                    <label>Email</label>
-                    <input type="email" placeholder="tu@correo.com" required>
+                    <label class="label-contacto">Email</label>
+                    <input class="input-contacto" type="email" placeholder="tu@correo.com" required>
                     
-                    <label>Telefono(opcional)</label>
-                    <input type="tel" placeholder="+34 683 924 731" >
+                    <label class="label-contacto">Telefono(opcional)</label>
+                    <input class="input-contacto" type="tel" placeholder="+34 683 924 731" >
 
-                    <label>Mensaje</label>
+                    <label class="label-contacto">Mensaje</label>
                     <textarea placeholder="Escribe tu mensaje..." required></textarea>
 
                     <button class="boton-contacto"type="submit">ENVIAR</button>
@@ -80,5 +70,3 @@
             </div>
         </div>
     </section>
-</body>
-</html>

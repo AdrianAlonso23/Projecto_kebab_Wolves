@@ -15,9 +15,15 @@
     </div>
     <?php include "view/" . $view; ?>
     <?php include "view/carrito-lateral.php"; ?>
-    <div>
+    <footer>
         <?php include("footer.php")?>
-    </div>
+    </footer>
+
+    <!--PASAR SESIÓN PHP A JAVASCRIPT -->
+    <script>
+        const USUARIO_ID = <?= isset($_SESSION['USUARIO_ID']) ? json_encode($_SESSION['USUARIO_ID']) : 'null' ?>;
+    </script>
+    
     <script src="http://localhost/ejemplos/Proyecto_kebab/public/JS/carrito.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

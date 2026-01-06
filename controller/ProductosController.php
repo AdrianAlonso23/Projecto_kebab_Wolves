@@ -5,7 +5,7 @@ class ProductosController {
 
     public function index() {
         $listaproductos = ProductosDAO::getProductos();
-        $view = 'view/productos/index.php';
+        $view = 'view/index.php';
         include_once 'view/main.php';
     }
 }

@@ -67,7 +67,7 @@ function mostrarUsuarios(usuarios) {
                         onclick="abrirModal(${u.USUARIO_ID})">
                     Editar
                 </button>
-                <button class="btn btn-danger btn-sm"
+                <button class="btn btn-warning btn-sm"
                         onclick="eliminarUsuario(${u.USUARIO_ID})">
                     Eliminar
                 </button>

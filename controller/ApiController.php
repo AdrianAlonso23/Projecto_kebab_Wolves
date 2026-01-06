@@ -2,9 +2,10 @@
     require_once "model/CategoriasDAO.php";
     require_once "model/UsuarioDAO.php";
     require_once "model/ProductosDAO.php";
-    require_once "model/Productos.php";
-    require_once "model/Usuario.php";
     require_once "model/PedidosDAO.php";
+    require_once "model/LineaPedidosDAO.php";
+    require_once "model/Usuario.php";
+    require_once "model/Productos.php";
     require_once "model/Pedidos.php";
     
 
@@ -373,12 +374,84 @@
             echo json_encode($data);
             exit;
         }
-
-
         public function createPedido() {
             header('Content-Type: application/json; charset=utf-8');
 
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $method = $_SERVER['REQUEST_METHOD'];
+            if ($method !== 'PUT' && $method !== 'POST') {
+                http_response_code(405);
+                echo json_encode(['success' => false, 'error' => 'Método no permitido']);
+                exit;
+            }
+
+            $raw = file_get_contents("php://input");
+            $data = json_decode($raw, true);
+
+            if (!$data) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => 'JSON inválido']);
+                exit;
+            }
+
+            $usuarioId  = $data['usuario_id'] ?? null;
+            $nombre     = $data['nombre'] ?? '';
+            $apellido   = $data['apellido'] ?? '';
+            $correo     = $data['correo'] ?? '';
+            $telefono   = $data['telefono'] ?? '';
+            $direccion  = $data['direccion'] ?? '';
+            $carrito    = $data['carrito'] ?? [];
+
+            if (!$usuarioId || !$nombre || !$correo || !$direccion || empty($carrito)) {
+                echo json_encode(['success' => false, 'error' => 'Faltan campos obligatorios']);
+                exit;
+            }
+
+            // 1️⃣ Crear el pedido
+            $pedido = new Pedidos();
+            $pedido->setUSUARIO_ID($usuarioId);
+            $pedido->setFECHA(date('Y-m-d H:i:s'));
+            
+            // Calcular total automáticamente
+            $total = 0;
+            foreach ($carrito as $item) {
+                $total += $item['precio'] * $item['cantidad'];
+            }
+            $pedido->setTOTAL($total);
+
+            $pedido->setDIRECCION($direccion);
+            $pedido->setTELEFONO($telefono);
+            $pedido->setESTADO('PENDIENTE');
+
+            $result = PedidosDAO::createPedido($pedido);
+
+            if (!$result['success']) {
+                echo json_encode(['success' => false, 'error' => 'Error al crear el pedido']);
+                exit;
+            }
+
+            $pedidoId = $result['pedido_id'];
+
+            // 2️⃣ Crear las líneas del pedido
+            foreach ($carrito as $item) {
+                $linea = new LineaPedidos();
+                $linea->setPEDIDO_ID($pedidoId);
+                $linea->setPRODUCTO_ID($item['id']);
+                $linea->setCANTIDAD($item['cantidad']);
+                $linea->setPRECIO_UNITARIO($item['precio']);
+                $linea->setSUBTOTAL($item['cantidad'] * $item['precio']);
+
+                LineaPedidosDAO::createLineaPedido($linea);
+            }
+
+            echo json_encode(['success' => true, 'pedido_id' => $pedidoId]);
+            exit;
+        }
+
+
+        public function updatePedido() {
+            header('Content-Type: application/json; charset=utf-8');
+
+            if ($_SERVER['REQUEST_METHOD'] !== 'PUT' && $_SERVER['REQUEST_METHOD'] !== 'POST') {
                 echo json_encode(['success' => false, 'error' => 'Método no permitido']);
                 exit;
             }
@@ -391,15 +464,32 @@
                 exit;
             }
 
+            $id = $data['PEDIDO_ID'] ?? null;
+            $usuarioId = $data['USUARIO_ID'] ?? null;
+            $fecha = $data['FECHA'] ?? '';
+            $estado = $data['ESTADO'] ?? '';
+            $total = $data['TOTAL'] ?? 0;
+
+            if (!$id || !$usuarioId || !$fecha || !$estado || !$total) {
+                echo json_encode(['success' => false, 'error' => 'Faltan campos obligatorios']);
+                exit;
+            }
+
             $pedido = new Pedidos();
-            $pedido->setUSUARIO_ID($data['USUARIO_ID']);
-            $pedido->setFECHA($data['FECHA']);
-            $pedido->setTOTAL($data['TOTAL']);
-            $pedido->setDIRECCION($data['DIRECCION']);
+            $pedido->setPEDIDO_ID($id);
+            $pedido->setUSUARIO_ID($usuarioId);
+            $pedido->setFECHA($fecha);
+            $pedido->setESTADO($estado);
+            $pedido->setTOTAL($total);
 
-            $ok = PedidosDAO::createPedido($pedido);
+            $ok = PedidosDAO::updatePedido($pedido);
 
-            echo json_encode($ok);
+            // Garantizar respuesta consistente para JS
+            if ($ok['success'] ?? false) {
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['success' => false, 'error' => $ok['error'] ?? 'No se pudo actualizar el pedido']);
+            }
             exit;
         }
 

@@ -4,11 +4,11 @@
         <button type="button" class="btn-close" id="cerrarCarrito"></button>
     </div>
     <div class="offcanvas-body">
-        <div id="carritoContenido"></div>
+        <div id="carritoLateralContenido"></div>
     </div>
     <div>
-        <div id="totalCarrito"></div>
+        <div id="totalCarritoLateral"></div>
     </div>
     <hr class="hr-carrito">
-    <button class="boton-pagar">Pagar Ahora</button>
+    <a href="?controller=Carrito&action=index" class="boton-pagar">Ir al Carrito</a>
 </div>

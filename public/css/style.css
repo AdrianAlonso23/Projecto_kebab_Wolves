@@ -1,7 +1,6 @@
 *{
     margin: 0;
     font-family: 'Albert Sans', sans-serif;
-
 }
 
 /******************************* Primer Nav ******************************/
@@ -469,7 +468,7 @@
     margin-top: 50px;
     border: #FDB913;
     border-bottom: 5px solid #FDB913;
-    width: 300px;
+    width: 180px;
 }
 /************************** Contacto ***************************/
 .contacto-container {
@@ -547,32 +546,29 @@
 }
 
 .formulario-contacto {
-    background-color: #fff;
+    background-color: #000;
     padding: 40px;
     width: 45%;
-    border: solid 1px #FDB913 ;
-    
 }
 
-form {
+.form-contacto {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-label {
+.label-contacto {
     font-weight: bold;
     color: #FDB913;
 }
 
-input, textarea {
-    background-color: #fff;
+.input-contacto , textarea {
+    background-color: #000;
     border: 2px solid #FDB913;
-    color: #000;
+    color: #fff;
     padding: 12px;
     font-size: 1rem;
 }
-
 
 textarea {
     resize: none;
@@ -594,22 +590,6 @@ textarea {
     color: #000;
 }
 
-/* ----- Responsive opcional ----- */
-@media (max-width: 900px) {
-    .contacto-container {
-        flex-direction: column;
-        align-items: center;
-        padding: 40px 20px;
-    }
-
-    .info-contacto, .formulario-contacto {
-        width: 100%;
-    }
-
-    .formulario-contacto {
-        margin-top: 40px;
-    }
-}
 /**************************** Login  *******************************/
 .fondo-login {
     position: relative;
@@ -822,7 +802,17 @@ textarea {
     margin-top: 50px;
     margin-bottom: 50px;
 }
-
+.input-registro {
+    margin-left: 10px;
+    border: none;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    color: #fff;
+}
+.input-registro:focus {
+    outline: none;
+}
 /************************** Panel Admin **************************/
 .section-admin {
     display: none;
@@ -849,15 +839,15 @@ textarea {
     text-align: center;
     background-color: #fff;
     padding: 50px;
-    box-shadow: 5px 5px 18px rgba(0,0,0,0.3);
+    border: solid 1px #FDB913;
+    box-shadow: 0 0px 5px rgba(0,0,0,0.3);
 }
-.div-usuarios{
-    justify-content: space-between;
-    display: flex;
+.tabla-usuarios{
+    width: 70%;
 }
+
 #listaUsuarios  {
     background-color: #fff;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.3);
     list-style: none;
     margin-bottom: 15px;
     border-radius: 5px;
@@ -869,18 +859,22 @@ textarea {
 }
 .form-usuarios{
     background-color: #fff;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.3);
+    box-shadow: 0 0px 10px rgba(0,0,0,0.3);
     padding: 35px;
-    color: #000;
+}
+
+#formCrearUsuario{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 .label-usuarios{
-    color: #FDB913;
+    color: #000;
 }
 .input-usuarios{
     background-color: #fff;
-    border-color: #ddd;
+    border-color: #000;
     height: 35px;
-    color: #000;
 }
 .boton-usuarios{
     background-color: #FDB913;
@@ -888,21 +882,21 @@ textarea {
     border: none;
     font-weight: bold;
 }
-/* GRID DE PRODUCTOS */
-.productos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
-    gap: 1rem;
-}
 
-/* TODAS LAS CARDS MISMO TAMAÑO */
-.productos-grid .card {
-    height: 100%;
+.boton-crear-pedidos{
+    background-color: #FDB913;
+    padding: 5px;
+    border: none;
+    font-weight: bold;
+}
+.boton-crear-pedidos:hover{
+    background-color: #FDB913;
+    
 }
 
 /* CARD AGREGAR PRODUCTO */
 .card-add-product {
-    min-height: 420px; /* MISMA ALTURA QUE TUS CARDS */
+    min-height: 420px; 
     border: 2px dashed #ccc;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -915,11 +909,6 @@ textarea {
 .card-add-product:hover {
     border-color: #ffc107;
     background-color: #fffbe6;
-}
-
-/* CONTENIDO CENTRADO */
-.card-add-content {
-    text-align: center;
 }
 
 .add-icon {
@@ -937,14 +926,14 @@ textarea {
 }
 #listaCategorias li {
     background-color: #fff;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.3);
+    box-shadow: 0 0px 10px rgba(0,0,0,0.3);
     list-style: none;
     margin-bottom: 15px;
     border-radius: 5px;
     padding: 10px;
     text-decoration: none;
 }
-/************************** Menu Carrito **************************/
+/************************** Menu Carrito Lateral**************************/
 .carrito-lateral {
     position: fixed;
     top: 0;
@@ -972,7 +961,7 @@ textarea {
     padding-bottom: 10px;
     margin-bottom: 10px;
 }
-#totalCarrito{
+#totalCarritoLateral{
     font-weight: bold;
     font-size: 20px;
     margin-bottom: 10px;
@@ -994,7 +983,233 @@ textarea {
     padding: 15px;
     cursor: pointer;
     margin-top: auto;
+    text-decoration: none;
+    text-align: center;
 }
+.carrito-lateral-item{
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    border-bottom: solid 1px #ddd;
+    height: 100px;
+}
+
+/************************ Pagina Carrito *************************/
+/* GENERAL */
+.pagina-carrito {
+    width: 90%;
+    margin: auto;
+}
+
+.titulo-principal {
+    font-weight: bold;
+    display: inline-block;
+    margin: 30px auto;
+}
+
+/* LAYOUT */
+.layout-carrito {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+/* ITEMS */
+.carrito-pagina-item {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr auto;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+    height: 180px;
+}
+
+/* PRODUCTO */
+.producto-info {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.info-texto {
+    display: flex;
+    flex-direction: column;
+}
+
+.acciones-producto {
+    margin-top: auto;
+    display: flex;
+    gap: 15px;
+    color: #000;
+    font-weight: bold;
+}
+
+.acciones-producto a {
+    font-size: 14px;
+    color: #000;
+    cursor: pointer;
+
+}
+.nombre-producto {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.modificar {
+    font-size: 14px;
+    color: #000;
+    height: auto;
+}
+
+/* CANTIDAD */
+.cantidad-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cantidad-control button {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #FDB913;
+    border: none;
+}
+
+/* PRECIO */
+.precio {
+    font-weight: bold;
+}
+
+/* ELIMINAR */
+.eliminar {
+    font-size: 14px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* FOOTER */
+.footer-carrito{
+    text-align: right;
+
+}
+.seguir-comprando {
+    display: inline-block;
+    margin-top: 15px;
+    text-decoration: underline;
+    font-weight: bold;
+    text-align: right;
+    color: #000;
+}
+
+/* DATOS CLIENTE */
+.titulo-datos-cliente{
+    font-weight: bold;
+    
+    margin: 30px auto;
+}
+.layout-carrito {
+    display: flex;
+    gap: 20px;
+}
+
+.col-izquierda {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.formulario-dos-columnas{
+    border:  1px solid #000;
+    margin-bottom: 50px;
+}
+.grid-datos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin: 25px;
+}
+.grid-datos label{
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+.grid-datos input {
+    width: 500px;
+    height: 30px;
+}
+
+/* RESUMEN */
+.col-derecha {
+    flex: 1;
+    background: #f0f0f0;
+    padding: 20px;
+    height: 950px;
+}
+.titulo-resumen{
+    justify-content: center;
+    display: flex;
+    text-align: center;
+    margin-bottom: 50px;
+}
+.titulo-resumen h3 {
+    text-align: center;
+    font-weight: bold;
+    border: #FDB913;
+    border-bottom: 5px solid #FDB913;
+    width: 180px;
+}
+.resumen-label{
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+.resumen input {
+    width: 100%;
+    margin-bottom: 25px;
+}
+.fila {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 50px;
+}
+
+.totales {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px ;
+}
+.totales span{
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.btn-pagar {
+    width: 100%;
+    background: #FDB913;
+    border: none;
+    padding: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 60px;
+}
+.disponible{
+    font-weight: bold;
+    text-align: center;
+    margin-top: 25px;
+}
+
+.metodos {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    align-items: center;
+}
+
+.metodos img {
+    height: 25px;
+}
+
+
+
 /************************ Footer *******************************/
 
 .div-footer{
@@ -1045,6 +1260,9 @@ textarea {
 }
 .copyright {
     margin-right: 240px;
+}
+.copyright p{
+    color: #575757;
 }
 /* ====== FOOTER RESPONSIVE ====== */
 @media (max-width: 480px) {

@@ -1,7 +1,7 @@
     <section>
         <div class="carta-container">
             <div class="titulo-carta">
-                <h1>Nuestra Carta</h1>
+                <h1>CARTA</h1>
             </div>
             <div>
                 <ul class="listas-categorias d-flex">
@@ -25,6 +25,7 @@
                                 <button class="boton-agregar"
                                 onclick='añadirAlCarrito({
                                     id: <?= $producto->getPRODUCTO_ID() ?>,
+                                    imagen: "<?= $producto->getIMAGEN() ?>",
                                     nombre: "<?= addslashes($producto->getNOMBRE()) ?>",
                                     precio: <?= $producto->getPRECIO() ?>
                                 })'>

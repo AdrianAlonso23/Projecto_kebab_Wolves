@@ -1,5 +1,5 @@
 <section class="d-flex">
-    <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
+    <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px; min-height: 550px;">
         <p class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
             <span class="fs-4">Menu Aministración</span>
         </p>
@@ -37,16 +37,16 @@
             </ul>
         </div>
     </div>
-    <section id="dashboard"class="section-admin  p-4 w-100">
+    <section id="dashboard"class="p-4 w-100">
         <div class="dashboard">
             <h3>Bienvenido al panel de Adminitrador!</h3>
             <p>Desde aquí podrás gestionar los usuarios, productos, categorías y pedidos de la plataforma.</p>
         </div>
     </section>
     <section id="usuarios" class="section-admin  p-4 w-100 ">
-        <h3>Usuarios</h3>
-        <div class="d-flex gap-5 w-100">
-            <div class="table-container">
+        <div class="d-flex justify-content-around">
+            <div class="tabla-usuarios">
+                <h3>Usuarios</h3>
                 <table class="table table-striped text-center align-items-center align-middle">
                     <thead>
                         <tr>
@@ -79,27 +79,44 @@
                         <option value="admin">admin</option>
                         <option value="usuario">user</option>
                     </select>
-
+    
                     <button class="boton-usuarios" type="submit">Crear usuario</button>
                 </form>
             </div>
         </div>
     </section>
-    <section id="pedidos"class="section-admin  p-4 w-100 ">
-        <h3>Pedidos</h3>
-        <table class="table table-striped text-center">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Usuario</th>
-                    <th>Fecha</th>
-                    <th>Total</th>
-                    <th>Dirección</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="listaPedidos"></tbody>
-        </table>
+    <section id="pedidos" class="section-admin p-4 w-100">
+        <div class="d-flex justify-content-between mb-3">
+            <div>
+                <h3>Pedidos</h3>
+            </div>
+            <!-- Select de monedas -->
+            <div class="d-flex align-items-center">
+                <label for="selectMoneda" class="me-2">Moneda:</label>
+                <select id="selectMoneda" class="form-select w-auto">
+                    <option value="EUR" selected>EUR</option>
+                    <option value="USD">USD</option>
+                    <option value="GBP">GBP</option>
+                    <option value="JPY">JPY</option>
+                </select>
+            </div>
+        </div>
+        <div class="table-container">
+            <table class="table table-striped text-center align-items-center align-middle">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                        <th>Dirección</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="listaPedidos"></tbody>
+            </table>
+        </div>
     </section>
     <section id="productos"class="section-admin p-4 w-100">
         <h3>Productos</h3>
@@ -262,6 +279,59 @@
         </div>
     </div>
 </div>
+<!-- Modal Editar Pedido -->
+ <!-- Modal Editar Pedido -->
+<div class="modal fade" id="modalEditarPedido" tabindex="-1" aria-labelledby="modalEditarPedidoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formEditarPedido" onsubmit="guardarEdicionPedido(event)">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditarPedidoLabel">Editar Pedido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editPedidoId">
+
+                    <div class="mb-3">
+                        <label for="editPedidoUsuario" class="form-label">Usuario ID</label>
+                        <input type="number" class="form-control" id="editPedidoUsuario" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editPedidoFecha" class="form-label">Fecha</label>
+                        <input type="datetime-local" class="form-control" id="editPedidoFecha" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editPedidoTotal" class="form-label">Total (€)</label>
+                        <input type="number" step="0.01" class="form-control" id="editPedidoTotal" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editPedidoDireccion" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="editPedidoDireccion" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editPedidoEstado" class="form-label">Estado</label>
+                        <select class="form-control" id="editPedidoEstado" required>
+                            <option value="PENDIENTE">PENDIENTE</option>
+                            <option value="EN_PROCESO">EN PROCESO</option>
+                            <option value="ENVIADO">ENVIADO</option>
+                            <option value="ENTREGADO">ENTREGADO</option>
+                            <option value="CANCELADO">CANCELADO</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script>
 
@@ -281,4 +351,4 @@
 <script src="public/JS/productos.js"></script>
 <script src="public/JS/categorias.js"></script>
 <script src="public/JS/usuarios.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="public/JS/pedidos.js"></script>

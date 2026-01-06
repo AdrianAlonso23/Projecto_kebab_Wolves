@@ -1,4 +1,5 @@
 <?php
+
     include_once "controller/HomeController.php";
     include_once "controller/CartaController.php";
     include_once "controller/LoginController.php";
@@ -7,6 +8,7 @@
     include_once "controller/ContactoController.php";
     include_once "controller/AdminController.php";
     include_once "controller/CarritoController.php";
+    include_once "controller/ApiController.php";
 
 
     if(session_status() == PHP_SESSION_NONE){
@@ -14,18 +16,21 @@
     }
 
     if (isset($_GET['controller'])) {
-        $nombre_controller = $_GET['controller'].'Controller';
-        include_once "controller/$nombre_controller.php";
-
-        if (class_exists($nombre_controller)) {
-            $controller = new $nombre_controller();
-            $action = $_GET['action'] ?? 'index';
-
-            if (method_exists($controller, $action)) {
+        $nombrecontroller = $_GET['controller'] . 'Controller';
+        if (class_exists($nombrecontroller)) {
+            $controller = new $nombrecontroller();
+            $action = $_GET['action'];
+            if(isset($action) && method_exists($controller, $action)){
                 $controller->$action();
             } else {
-                echo "Acción no encontrada";
+                header("Location:404.php");
             }
+        } 
+        else {
+            echo "controller no encontrado: " . $nombrecontroller;
         }
+    } else {
+        $homeController = new HomeController();
+        $homeController->index();
     }
-?>
+?> 

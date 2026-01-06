@@ -15,6 +15,5 @@ class ContactoController {
             $respuesta = "Gracias, $nombre. Tu mensaje ha sido enviado correctamente.";
         }
 
-        require_once __DIR__ . '/../views/contacto.php';
     }
 }

@@ -5,7 +5,9 @@
         private $FECHA;
         private $TOTAL;
         private $DIRECCION;
-
+        private $TELEFONO;
+        private $CODIGO_POSTAL;
+        private $ESTADO;
 
         public function __construct() {
         }
@@ -30,6 +32,18 @@
             return $this->DIRECCION;
         }
 
+        public function getTELEFONO(){
+            return $this->TELEFONO;
+        }
+
+        public function getCODIGO_POSTAL(){
+            return $this->CODIGO_POSTAL;
+        }
+
+        public function getESTADO(){
+            return $this->ESTADO;
+        }
+
         public function setPEDIDO_ID($PEDIDO_ID){
             $this->PEDIDO_ID = $PEDIDO_ID;
         }
@@ -49,6 +63,19 @@
         public function setDIRECCION($DIRECCION){
             $this->DIRECCION = $DIRECCION;
         }
+
+        public function setTELEFONO($TELEFONO){
+            $this->TELEFONO = $TELEFONO;
+        }
+
+        public function setCODIGO_POSTAL($CODIGO_POSTAL){
+            $this->CODIGO_POSTAL = $CODIGO_POSTAL;
+        }
+
+        public function setESTADO($ESTADO){
+            $this->ESTADO = $ESTADO;
+        }
+
         /***************APi JSON *****************/
         public function toArray(){
             return[
@@ -56,7 +83,10 @@
                 'USUARIO_ID' => $this->USUARIO_ID,
                 'FECHA' => $this->FECHA,
                 'TOTAL' => $this->TOTAL,
-                'DIRECCION' => $this->DIRECCION
+                'DIRECCION' => $this->DIRECCION,
+                'TELEFONO' => $this->TELEFONO,
+                'CODIGO_POSTAL' => $this->CODIGO_POSTAL,
+                'ESTADO' => $this->ESTADO
             ];
         }
     }
