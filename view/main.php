@@ -8,27 +8,23 @@
     <link rel="stylesheet" href="public/css/style.css">
 </head>
 <body>
-<?php include_once "view/header.php"; ?>
+    <div>
+         <div>
+            <?php require_once 'header.php'?>
+        </div>
+    </div>
+    <?php include "view/" . $view; ?>
+    <?php include "view/carrito-lateral.php"; ?>
+    <footer>
+        <?php include("footer.php")?>
+    </footer>
 
-<section>
-    <div class="titulo-populares">
-        <h2>Mas Populares</h2> 
-    </div>
-    <div class="populares">
-        <?php foreach($listaproductos as $producto): ?>
-            <div class="card" style="width: 24rem;">
-                <img src="public/img/<?=$producto->getIMAGEN()?>" class="card-img-top">
-                <div class="card-body">
-                    <h4><?=$producto->getNOMBRE()?></h4>
-                    <p><?=$producto->getDESCRIPCION()?></p>
-                    <p><strong><?=$producto->getPRECIO()?> €</strong></p>
-                    <a href="index.php?controller=Productos&action=show&PRODUCTO_ID=<?=$producto->getPRODUCTO_ID()?>" class="btn btn-primary">
-                        Agregar
-                    </a> 
-                </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
-</section>
+    <!--PASAR SESIÓN PHP A JAVASCRIPT -->
+    <script>
+        const USUARIO_ID = <?= isset($_SESSION['USUARIO_ID']) ? json_encode($_SESSION['USUARIO_ID']) : 'null' ?>;
+    </script>
+    
+    <script src="http://localhost/ejemplos/Proyecto_kebab/public/JS/carrito.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
