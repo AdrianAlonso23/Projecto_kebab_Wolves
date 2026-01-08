@@ -1,5 +1,4 @@
 <?php
-
     include_once "controller/HomeController.php";
     include_once "controller/CartaController.php";
     include_once "controller/LoginController.php";
@@ -9,6 +8,8 @@
     include_once "controller/AdminController.php";
     include_once "controller/CarritoController.php";
     include_once "controller/ApiController.php";
+    include_once "controller/MonedaController.php";
+    include_once "controller/PerfilController.php";
 
 
     if(session_status() == PHP_SESSION_NONE){
@@ -33,4 +34,5 @@
         $homeController = new HomeController();
         $homeController->index();
     }
+
 ?> 

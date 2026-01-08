@@ -1,24 +1,24 @@
 <section class="d-flex">
-    <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px; min-height: 550px;">
+    <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px; min-height: 650px;">
         <p class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
             <span class="fs-4">Menu Aministración</span>
         </p>
         <hr>
         <ul class=" flex-column mb-auto">
-            <li class="nav-item-admin ">
-                <button>Dashboard</button>
-            </li>
-            <li class="nav-item-admin"> 
-                <button>Usuarios</buttton>
+            <li class="nav-item-admin">
+                <button type="button">Dashboard</button>
             </li>
             <li class="nav-item-admin">
-                <button>Pedidos</button>
+                <button type="button">Usuarios</button>
             </li>
             <li class="nav-item-admin">
-                <button>Productos</button>
+                <button type="button">Pedidos</button>
             </li>
             <li class="nav-item-admin">
-                <button>Categorias</button>
+                <button type="button">Productos</button>
+            </li>
+            <li class="nav-item-admin">
+                <button type="button">Categorias</button>
             </li>
         </ul>
         <hr>
@@ -31,7 +31,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1" style="">
                 <li><a class="dropdown-item" href="#">Ajustes</a></li>
-                <li><a class="dropdown-item" href="#">Perfil</a></li>
+                <li><a class="dropdown-item" href="?controller=Perfil&action=index">Perfil</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="?controller=Login&action=logout">Cerrar Sesión</a></li>
             </ul>
@@ -77,7 +77,7 @@
                     <select id="crearRol" required>
                         <option value="">-</option>
                         <option value="admin">admin</option>
-                        <option value="usuario">user</option>
+                        <option value="user">user</option>
                     </select>
     
                     <button class="boton-usuarios" type="submit">Crear usuario</button>
@@ -90,14 +90,44 @@
             <div>
                 <h3>Pedidos</h3>
             </div>
+            <!-- Filtros pedidos -->
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <input 
+                        type="text" 
+                        id="filtroUsuario" 
+                        class="form-control" 
+                        placeholder="Filtrar por usuario">
+                </div>
+
+                <div class="col-md-3">
+                    <input 
+                        type="date" 
+                        id="filtroFecha" 
+                        class="form-control">
+                </div>
+
+                <div class="col-md-3">
+                    <select id="ordenPrecio" class="form-select">
+                        <option value="">Ordenar por precio</option>
+                        <option value="asc">Precio ↑</option>
+                        <option value="desc">Precio ↓</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <button id="btnAplicarFiltros" class="btn btn-warning">
+                        Aplicar filtros
+                    </button>
+                </div>
+            </div>
             <!-- Select de monedas -->
             <div class="d-flex align-items-center">
                 <label for="selectMoneda" class="me-2">Moneda:</label>
                 <select id="selectMoneda" class="form-select w-auto">
                     <option value="EUR" selected>EUR</option>
                     <option value="USD">USD</option>
-                    <option value="GBP">GBP</option>
-                    <option value="JPY">JPY</option>
+                    <option value="CAD">CAD</option>
                 </select>
             </div>
         </div>
@@ -106,10 +136,11 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Usuario</th>
+                        <th>Nombre Usuario</th>
                         <th>Fecha</th>
                         <th>Total</th>
                         <th>Dirección</th>
+                        <th>Productos</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -221,6 +252,15 @@
             <label class="form-label">Imagen</label>
             <input type="text" class="form-control" id="crearProductoImagen">
           </div>
+          <div class="mb-3">
+            <label class="form-label">Oferta (opcional)</label>
+            <select class="form-control" id="crearProductoOferta">
+                <option value="">-- Sin oferta --</option>
+                <!-- Aquí puedes cargar dinámicamente las ofertas desde PHP -->
+                <option value="1">Oferta 1</option>
+                <option value="2">Oferta 2</option>
+            </select>
+        </div>
 
         </div>
 
@@ -270,6 +310,15 @@
                 <label for="editProductoImagen" class="form-label">Imagen</label>
                 <input type="text" class="form-control" id="editProductoImagen">
             </div>
+
+            <div class="mb-3">
+                <label class="form-label">Oferta (opcional)</label>
+                <select class="form-control" id="editProductoOferta">
+                    <option value="">-- Sin oferta --</option>
+                    <option value="1">Oferta 1</option>
+                    <option value="2">Oferta 2</option>
+                </select>
+            </div>
             </div>
             <div class="modal-footer">
             <button type="button" class="boton-modal-productos" data-bs-dismiss="modal">Cancelar</button>
@@ -279,7 +328,6 @@
         </div>
     </div>
 </div>
-<!-- Modal Editar Pedido -->
  <!-- Modal Editar Pedido -->
 <div class="modal fade" id="modalEditarPedido" tabindex="-1" aria-labelledby="modalEditarPedidoLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -322,11 +370,10 @@
                             <option value="CANCELADO">CANCELADO</option>
                         </select>
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-success">Guardar cambios</button>
+                    <button type="submit" class="btn btn-success" id="guardarPedidoBtn">Guardar cambios</button>
                 </div>
             </form>
         </div>

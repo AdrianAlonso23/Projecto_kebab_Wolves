@@ -157,24 +157,25 @@ function crearUsuario() {
     });
 }
 
-// Eliminar usuario (DELETE)
-function eliminarUsuario(id) {
-    if (!confirm('¿Seguro que quieres eliminar este usuario?')) return;
+// Eliminar pedido (DELETE)
+function eliminarPedido(id) {
+    if (!confirm('¿Seguro que quieres eliminar este pedido?')) return;
 
-    fetch(`http://localhost/ejemplos/Proyecto_kebab/index.php?controller=Api&action=deleteUsuario&id=${id}`, {
+    fetch(`http://localhost/ejemplos/Proyecto_kebab/index.php?controller=Api&action=deletePedido&id=${id}`, {
         method: 'DELETE'
     })
     .then(res => res.json())
     .then(resp => {
         if (resp.success) {
-            alert('Usuario eliminado');
-            cargarUsuarios();
+            alert('Pedido eliminado correctamente');
+            cargarPedidos();
         } else {
-            alert(resp.error || 'Error al eliminar usuario');
+            alert(resp.error || 'Error al eliminar pedido');
         }
     })
     .catch(err => {
         console.error(err);
-        alert('Error al eliminar usuario');
+        alert('Error al eliminar pedido');
     });
 }
+

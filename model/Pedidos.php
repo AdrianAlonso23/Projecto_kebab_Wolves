@@ -9,6 +9,10 @@
         private $CODIGO_POSTAL;
         private $ESTADO;
 
+        public $NOMBRE_USUARIO; // Nombre del usuario
+        public $CORREO_USUARIO; // Correo del usuario
+        public $LINEAS = [];    // Array de productos con cantidad
+
         public function __construct() {
         }
 
@@ -76,17 +80,20 @@
             $this->ESTADO = $ESTADO;
         }
 
-        /***************APi JSON *****************/
+        // Para API JSON
         public function toArray(){
-            return[
+            return [
                 'PEDIDO_ID' => $this->PEDIDO_ID,
                 'USUARIO_ID' => $this->USUARIO_ID,
+                'NOMBRE_USUARIO' => $this->NOMBRE_USUARIO ?? '',
+                'CORREO_USUARIO' => $this->CORREO_USUARIO ?? '',
                 'FECHA' => $this->FECHA,
                 'TOTAL' => $this->TOTAL,
                 'DIRECCION' => $this->DIRECCION,
                 'TELEFONO' => $this->TELEFONO,
                 'CODIGO_POSTAL' => $this->CODIGO_POSTAL,
-                'ESTADO' => $this->ESTADO
+                'ESTADO' => $this->ESTADO,
+                'LINEAS' => $this->LINEAS
             ];
         }
     }

@@ -16,21 +16,35 @@
             document.getElementById('modalCrearProducto')
         );
     });
-    
-    class Producto {
-        constructor(PRODUCTO_ID, NOMBRE, DESCRIPCION, PRECIO, CATEGORIA_ID, IMAGEN){
-            this.PRODUCTO_ID = PRODUCTO_ID;
-            this.NOMBRE = NOMBRE;
-            this.DESCRIPCION = DESCRIPCION;
-            this.PRECIO = PRECIO;
-            this.CATEGORIA_ID = CATEGORIA_ID;
-            this.IMAGEN = IMAGEN;
+
+class Producto {
+    constructor(PRODUCTO_ID, NOMBRE, DESCRIPCION, PRECIO, CATEGORIA_ID, IMAGEN, OFERTA_ID = null, OFERTA = null) {
+        this.PRODUCTO_ID = PRODUCTO_ID;
+        this.NOMBRE = NOMBRE;
+        this.DESCRIPCION = DESCRIPCION;
+        this.PRECIO = PRECIO;
+        this.CATEGORIA_ID = CATEGORIA_ID;
+        this.IMAGEN = IMAGEN;
+        this.OFERTA_ID = OFERTA_ID;
+        this.OFERTA = OFERTA;
+
+        // 🔹 Calcular PRECIO_FINAL
+        this.PRECIO_FINAL = this.PRECIO;
+
+        if (this.OFERTA) {
+            if (this.OFERTA.PORCENTAJE && this.OFERTA.PORCENTAJE > 0) {
+                this.PRECIO_FINAL = this.PRECIO * (1 - this.OFERTA.PORCENTAJE / 100);
+            } else if (this.OFERTA.DESCUENTO_FIJO && this.OFERTA.DESCUENTO_FIJO > 0) {
+                this.PRECIO_FINAL = this.PRECIO - this.OFERTA.DESCUENTO_FIJO;
+            }
         }
     }
+}   
+
 function mostrarProductos(productos) {
     const container = document.getElementById('productosContainer');
 
-    // Borra SOLO las cards de productos (no la de agregar)
+    // Limpiar productos existentes
     container.querySelectorAll('.card.producto').forEach(card => card.remove());
 
     productos.forEach(producto => {
@@ -38,21 +52,33 @@ function mostrarProductos(productos) {
         div.classList.add('card', 'producto');
         div.style.width = '18rem';
 
+        // 🔹 Calcular HTML del precio
+        let precioHTML;
+        if (producto.PRECIO_FINAL !== producto.PRECIO) {
+            precioHTML = `
+                <s class="text-muted">${producto.PRECIO.toFixed(2)}€</s>
+                <span class="text-danger fw-bold">${producto.PRECIO_FINAL.toFixed(2)}€</span>
+            `;
+        } else {
+            precioHTML = `<strong>${producto.PRECIO.toFixed(2)}€</strong>`;
+        }
+
         div.innerHTML = `
             <img src="public/img/${producto.IMAGEN}" class="card-img-top">
             <div class="card-body">
                 <h5 class="card-title">${producto.NOMBRE}</h5>
                 <p class="card-text">${producto.DESCRIPCION}</p>
-                <p class="card-text"><strong>Precio:</strong> $${producto.PRECIO}</p>
+                <p class="card-text">${precioHTML}</p>
             </div>
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between mb-2 mx-2">
                 <button class="btn btn-warning btn-sm btnEditar">Editar Producto</button>
-                <button class="btn btn-danger btn-sm btnEliminar">Eliminar Producto</button>
+                <button class="btn btn-warning btn-sm btnEliminar">Eliminar Producto</button>
             </div>
         `;
 
         container.appendChild(div);
 
+        // Botones de editar y eliminar
         div.querySelector('.btnEditar')
             .addEventListener('click', () => abrirModalEdicion(producto));
 
@@ -61,26 +87,27 @@ function mostrarProductos(productos) {
     });
 }
 
-    function cargarProductos() {
-        fetch('http://localhost/ejemplos/Proyecto_kebab/index.php?controller=Api&action=getProductos')
-            .then(response => response.json())
-            .then(data => {
-                const productos = data.map(p => new Producto(
-                    p.PRODUCTO_ID,
-                    p.NOMBRE,
-                    p.DESCRIPCION,
-                    p.PRECIO,
-                    p.CATEGORIA_ID,
-                    p.IMAGEN
-                ));
+function cargarProductos() {
+    fetch('http://localhost/ejemplos/Proyecto_kebab/index.php?controller=Api&action=getProductosAdmin')
+        .then(response => response.json())
+        .then(data => {
+            const productos = data.map(p => new Producto(
+                p.PRODUCTO_ID,
+                p.NOMBRE,
+                p.DESCRIPCION,
+                parseFloat(p.PRECIO),
+                p.CATEGORIA_ID,
+                p.IMAGEN,
+                p.OFERTA_ID ?? null,
+                p.OFERTA ?? null
+            ));
 
-                mostrarProductos(productos);
-                productos.forEach(producto => console.log('Producto:', producto));
-            })
-        .catch(err => console.error('Error al cargar productos:', err));
-    }
+            mostrarProductos(productos);
+        })
+    .catch(err => console.error('Error al cargar productos:', err));
+}
 
-    document.addEventListener("DOMContentLoaded", cargarProductos);
+document.addEventListener("DOMContentLoaded", cargarProductos);
 
 
 // Abrir modal y rellenar campos
@@ -99,15 +126,18 @@ function abrirModalEdicion(producto) {
 function guardarEdicionProducto(e) {
     e.preventDefault();
 
+    // Crear objeto producto con los valores del formulario
     const producto = {
         PRODUCTO_ID: parseInt(document.getElementById('editProductoId').value),
         NOMBRE: document.getElementById('editProductoNombre').value,
         DESCRIPCION: document.getElementById('editProductoDescripcion').value,
         PRECIO: parseFloat(document.getElementById('editProductoPrecio').value),
         CATEGORIA_ID: parseInt(document.getElementById('editProductoCategoria').value),
-        IMAGEN: document.getElementById('editProductoImagen').value
+        IMAGEN: document.getElementById('editProductoImagen').value,
+        OFERTA_ID: document.getElementById('editProductoOferta').value || null
     };
 
+    // Ahora enviamos al backend
     fetch('?controller=Api&action=updateProducto', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json; charset=UTF-8' },
@@ -142,7 +172,8 @@ function crearProducto(e) {
         DESCRIPCION: document.getElementById('crearProductoDescripcion').value,
         PRECIO: parseFloat(document.getElementById('crearProductoPrecio').value),
         CATEGORIA_ID: parseInt(document.getElementById('crearProductoCategoria').value),
-        IMAGEN: document.getElementById('crearProductoImagen').value
+        IMAGEN: document.getElementById('crearProductoImagen').value,
+        OFERTA_ID: document.getElementById('crearProductoOferta').value 
     };
 
     fetch('http://localhost/ejemplos/Proyecto_kebab/index.php?controller=Api&action=createProducto', {

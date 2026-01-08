@@ -78,7 +78,8 @@
                 'PRECIO' => $this->PRECIO,
                 'IMAGEN' => $this->IMAGEN,
                 'CATEGORIA_ID' => $this->CATEGORIA_ID,
-                'OFERTA_ID' => $this->OFERTA_ID
+                'OFERTA_ID' => $this->OFERTA_ID,
+                'OFERTA' => $this->OFERTA
             ];
         }
     }

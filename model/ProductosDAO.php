@@ -27,6 +27,57 @@ class ProductosDAO {
         $conn->close();
         return $listaproductos;
     }
+    public static function getProductosadmin() {
+        $conn = Database::connect();
+
+        $sql = "
+            SELECT 
+                p.*,
+                o.PORCENTAJE,
+                o.DESCUENTO_FIJO
+            FROM productos p
+            LEFT JOIN ofertas o ON p.OFERTA_ID = o.OFERTA_ID
+        ";
+
+        $result = $conn->query($sql);
+        $productos = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $producto = new Productos();
+            $producto->setPRODUCTO_ID($row['PRODUCTO_ID']);
+            $producto->setNOMBRE($row['NOMBRE']);
+            $producto->setDESCRIPCION($row['DESCRIPCION']);
+            $producto->setPRECIO(floatval($row['PRECIO']));
+            $producto->setIMAGEN($row['IMAGEN']);
+            $producto->setCATEGORIA_ID($row['CATEGORIA_ID']);
+            $producto->setOFERTA_ID($row['OFERTA_ID'] ?? null);
+
+            
+            if (!empty($row['OFERTA_ID'])) {
+                $producto->OFERTA = [
+                    'PORCENTAJE' => isset($row['PORCENTAJE']) ? floatval($row['PORCENTAJE']) : 0,
+                    'DESCUENTO_FIJO' => isset($row['DESCUENTO_FIJO']) ? floatval($row['DESCUENTO_FIJO']) : 0
+                ];
+            } else {
+                $producto->OFERTA = null;
+            }
+
+            
+            $producto->PRECIO_FINAL = $producto->getPRECIO();
+            if ($producto->OFERTA) {
+                if (!empty($producto->OFERTA['PORCENTAJE']) && $producto->OFERTA['PORCENTAJE'] > 0) {
+                    $producto->PRECIO_FINAL = $producto->getPRECIO() * (1 - $producto->OFERTA['PORCENTAJE'] / 100);
+                } elseif (!empty($producto->OFERTA['DESCUENTO_FIJO']) && $producto->OFERTA['DESCUENTO_FIJO'] > 0) {
+                    $producto->PRECIO_FINAL = $producto->getPRECIO() - $producto->OFERTA['DESCUENTO_FIJO'];
+                }
+            }
+
+            $productos[] = $producto->toArray(); 
+        }
+
+        $conn->close();
+        return $productos;
+    }
 
     public static function getProductosByCategoria($CATEGORIA_ID) {
         $conn = Database::connect();
@@ -62,16 +113,11 @@ class ProductosDAO {
         $con = Database::connect();
 
         $sql = "UPDATE productos 
-                SET NOMBRE = ?, DESCRIPCION = ?, PRECIO = ?, CATEGORIA_ID = ?, IMAGEN = ?
+                SET NOMBRE = ?, DESCRIPCION = ?, PRECIO = ?, CATEGORIA_ID = ?, IMAGEN = ?, OFERTA_ID = ?
                 WHERE PRODUCTO_ID = ?";
 
         $stmt = $con->prepare($sql);
-        if (!$stmt) {
-            return [
-                'success' => false,
-                'error' => $con->error
-            ];
-        }
+        if (!$stmt) return ['success' => false, 'error' => $con->error];
 
         $nombre = $producto->getNOMBRE();
         $descripcion = $producto->getDESCRIPCION();
@@ -79,15 +125,28 @@ class ProductosDAO {
         $categoria = $producto->getCATEGORIA_ID();
         $imagen = $producto->getIMAGEN();
         $id = $producto->getPRODUCTO_ID();
+        $oferta = $producto->getOFERTA_ID(); 
 
-        $stmt->bind_param("ssdssi", $nombre, $descripcion, $precio, $categoria, $imagen, $id);
+        // Pasar NULL como referencia
+        if ($oferta === null) $oferta = null; 
+
+        $stmt->bind_param(
+            "ssdssii",
+            $nombre,
+            $descripcion,
+            $precio,
+            $categoria,
+            $imagen,
+            $oferta,
+            $id
+        );
 
         if (!$stmt->execute()) {
-            return [
-                'success' => false,
-                'error' => $stmt->error
-            ];
+            return ['success' => false, 'error' => $stmt->error];
         }
+
+        $stmt->close();
+        $con->close();
 
         return ['success' => true];
     }
@@ -95,8 +154,8 @@ class ProductosDAO {
     public static function createProducto($producto) {
         $con = Database::connect();
 
-        $sql = "INSERT INTO productos (NOMBRE, DESCRIPCION, PRECIO, CATEGORIA_ID, IMAGEN)
-                VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO productos (NOMBRE, DESCRIPCION, PRECIO, CATEGORIA_ID, IMAGEN, OFERTA_ID)
+                VALUES (?, ?, ?, ?, ?, ?)";
 
         $stmt = $con->prepare($sql);
         if (!$stmt) {
@@ -111,8 +170,9 @@ class ProductosDAO {
         $precio = $producto->getPRECIO();
         $categoria = $producto->getCATEGORIA_ID();
         $imagen = $producto->getIMAGEN();
+        $oferta = $producto->getOFERTA_ID() ?? null; 
 
-        $stmt->bind_param("ssdss", $nombre, $descripcion, $precio, $categoria, $imagen);
+        $stmt->bind_param("ssdssi", $nombre, $descripcion, $precio, $categoria, $imagen, $oferta);
 
         if (!$stmt->execute()) {
             return [

@@ -19,10 +19,34 @@
                             <div class="cuerpo-productos">
                                 <h4 class="titulo-producto"><?=$producto->getNOMBRE()?></h4>
                                 <p class="descripcion-producto"><?=$producto->getDESCRIPCION()?></p>
-                                <p><strong><?=$producto->getPRECIO()?> €</strong></p>
+                                <?php
+                                    $precioOriginal = $producto->getPRECIO();
+                                    $precioFinal = $precioOriginal;
+
+                                    if($producto->getOFERTA_ID() != null){
+                                        $oferta = OfertasDAO::getOfertaById($producto->getOFERTA_ID());
+
+                                        if($oferta){
+                                            if($oferta->getPORCENTAJE() > 0){
+                                                $precioFinal = $precioOriginal * (1 - $oferta->getPORCENTAJE()/100);
+                                            } else {
+                                                $precioFinal = $precioOriginal - $oferta->getDESCUENTO_FIJO();
+                                            }
+                                        }
+                                    }
+                                ?>
+                                <p>
+                                    <?php if($precioFinal != $precioOriginal): ?>
+                                        <s class="precio-anterior"><strong><?= number_format($precioOriginal,2) ?> €</strong></s>
+                                        <span class="precio-oferta"><strong><?= number_format($precioFinal,2) ?> €</strong></span>
+                                    <?php else: ?>
+                                        <strong><?= number_format($precioOriginal,2) ?> €</strong>
+                                    <?php endif; ?>
+                                </p>
                                 <button class="boton-agregar"
                                 onclick='añadirAlCarrito({
                                     id: <?= $producto->getPRODUCTO_ID() ?>,
+                                    imagen: "<?= $producto->getIMAGEN() ?>",
                                     nombre: "<?= addslashes($producto->getNOMBRE()) ?>",
                                     precio: <?= $producto->getPRECIO() ?>
                                 })'>
@@ -53,7 +77,7 @@
                     <div class="d-flex justify-content-center gap-5">
                         <?php foreach ($chunk as $producto): ?>
                         <div class="img-hover-container">
-                            <a href=""><img src="public/img/<?=$producto->getIMAGEN()?>" class="img-fija"></a>
+                            <a href="?controller=Carta&action=index "><img src="public/img/<?=$producto->getIMAGEN()?>" class="img-fija"></a>
                             <div class="hover-text">
                                 <div class="descripcion-menu">
                                     <h3 class="texto-menu"><?=$producto->getNOMBRE()?></h3>

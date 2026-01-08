@@ -174,7 +174,7 @@ require_once 'model/Usuario.php';
             $stmt->close();
             $con->close();
 
-            return ['success' => true];  // <-- importante que devuelva un array con success
+            return ['success' => true]; 
         }
     }
 ?>

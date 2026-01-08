@@ -21,8 +21,18 @@ function añadirAlCarrito(producto) {
 
     guardarCarrito(carrito);
     actualizarCarritoUI(carrito, 'carritoLateralContenido', 'totalCarritoLateral');
-    offcanvasCarrito.show();
+    actualizarContadorCarrito(carrito);
 }
+
+function actualizarContadorCarrito(carrito) {
+    const contador = document.getElementById('contadorCarrito');
+    if (!contador) return;
+
+    const totalItems = carrito.reduce((acc, p) => acc + p.cantidad, 0);
+    contador.textContent = totalItems;
+    contador.style.display = totalItems > 0 ? 'inline-block' : 'none';
+}
+
 
 function actualizarCarritoUI(carrito, contenedorId, totalId) {
     const cont = document.getElementById(contenedorId);
@@ -87,6 +97,7 @@ function actualizarCarritoUI(carrito, contenedorId, totalId) {
                 guardarCarrito(c);
                 actualizarCarritoUI(c, 'carritoPaginaContenido', 'totalCarritoPagina');
                 actualizarCarritoUI(c, 'carritoLateralContenido', 'totalCarritoLateral');
+                actualizarContadorCarrito(c);
             });
         });
 
@@ -100,6 +111,7 @@ function actualizarCarritoUI(carrito, contenedorId, totalId) {
                 guardarCarrito(c);
                 actualizarCarritoUI(c, 'carritoPaginaContenido', 'totalCarritoPagina');
                 actualizarCarritoUI(c, 'carritoLateralContenido', 'totalCarritoLateral');
+                actualizarContadorCarrito(c);
             });
         });
 
@@ -111,6 +123,7 @@ function actualizarCarritoUI(carrito, contenedorId, totalId) {
                 guardarCarrito(c);
                 actualizarCarritoUI(c, 'carritoPaginaContenido', 'totalCarritoPagina');
                 actualizarCarritoUI(c, 'carritoLateralContenido', 'totalCarritoLateral');
+                actualizarContadorCarrito(c);
             });
         });
     }
@@ -158,4 +171,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 0);
         });
     }
+
+    actualizarContadorCarrito(obtenerCarrito());
 });

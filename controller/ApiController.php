@@ -4,9 +4,12 @@
     require_once "model/ProductosDAO.php";
     require_once "model/PedidosDAO.php";
     require_once "model/LineaPedidosDAO.php";
+    require_once "model/LineaPedidos.php";
     require_once "model/Usuario.php";
     require_once "model/Productos.php";
     require_once "model/Pedidos.php";
+    require_once "model/OfertasDAO.php";
+    require_once "model/Ofertas.php";
     
 
     class ApiController{
@@ -65,7 +68,7 @@
             header('Content-Type: application/json; charset=utf-8');
 
             $method = $_SERVER['REQUEST_METHOD'];
-            if ($method !== 'PUT' && $method !== 'POST') {
+            if ($method !== 'PUT') {
                 http_response_code(405);
                 echo json_encode(['success' => false, 'error' => 'Método no permitido']);
                 exit;
@@ -121,7 +124,7 @@
             header('Content-Type: application/json; charset=utf-8');
 
             $method = $_SERVER['REQUEST_METHOD'];
-            if ($method !== 'PUT' && $method !== 'POST') {
+            if ($method !== 'PUT') {
                 http_response_code(405);
                 echo json_encode(['success' => false, 'error' => 'Método no permitido']);
                 exit;
@@ -220,32 +223,64 @@
             echo json_encode($data);
             exit;
         }
+        
+        public function getProductosAdmin() {
+            $productos = ProductosDAO::getProductosAdmin(); 
+
+            header('Content-Type: application/json; charset=utf-8');
+
+            $data = [];
+
+            foreach ($productos as $p) {
+                // $p ahora es array
+                $precio_final = $p['PRECIO']; 
+
+                if (!empty($p['OFERTA'])) {
+                    if (!empty($p['OFERTA']['PORCENTAJE']) && $p['OFERTA']['PORCENTAJE'] > 0) {
+                        $precio_final = $p['PRECIO'] * (1 - $p['OFERTA']['PORCENTAJE'] / 100);
+                    } elseif (!empty($p['OFERTA']['DESCUENTO_FIJO']) && $p['OFERTA']['DESCUENTO_FIJO'] > 0) {
+                        $precio_final = $p['PRECIO'] - $p['OFERTA']['DESCUENTO_FIJO'];
+                    }
+                }
+
+                // Añadimos PRECIO_FINAL al array
+                $p['PRECIO_FINAL'] = $precio_final;
+
+                $data[] = $p;
+            }
+
+            echo json_encode($data, JSON_UNESCAPED_UNICODE);
+            exit;
+        }
 
         public function updateProducto() {
             header('Content-Type: application/json; charset=utf-8');
 
             $method = $_SERVER['REQUEST_METHOD'];
-            if ($method !== 'PUT' && $method !== 'POST') {
+            if ($method !== 'PUT') {
                 http_response_code(405);
                 echo json_encode(['success' => false, 'error' => 'Método no permitido']);
                 exit;
             }
 
+            // Leer el JSON crudo
             $raw = file_get_contents("php://input");
             $data = json_decode($raw, true);
 
+            // Validar que JSON sea válido
             if (!$data) {
                 http_response_code(400);
                 echo json_encode(['success' => false, 'error' => 'JSON inválido']);
                 exit;
             }
 
-            $id = $data['PRODUCTO_ID'] ?? null;
-            $nombre = $data['NOMBRE'] ?? '';
+            $id          = $data['PRODUCTO_ID'] ?? null;
+            $nombre      = $data['NOMBRE'] ?? '';
             $descripcion = $data['DESCRIPCION'] ?? '';
-            $precio = $data['PRECIO'] ?? 0;
-            $categoria = $data['CATEGORIA_ID'] ?? 0;
-            $imagen = $data['IMAGEN'] ?? '';
+            $precio      = $data['PRECIO'] ?? 0;
+            $categoria   = $data['CATEGORIA_ID'] ?? 0;
+            $imagen      = $data['IMAGEN'] ?? '';
+            $oferta      = $data['OFERTA_ID'] ?? null; 
 
             if (!$id || !$nombre) {
                 http_response_code(400);
@@ -260,6 +295,7 @@
             $producto->setPRECIO($precio);
             $producto->setCATEGORIA_ID($categoria);
             $producto->setIMAGEN($imagen);
+            $producto->setOFERTA_ID($oferta); 
 
             $ok = ProductosDAO::updateProducto($producto);
 
@@ -277,28 +313,29 @@
             header('Content-Type: application/json; charset=utf-8');
 
             $method = $_SERVER['REQUEST_METHOD'];
-            if ($method !== 'PUT' && $method !== 'POST') {
+            if ($method !== 'PUT') {
                 http_response_code(405);
                 echo json_encode(['success' => false, 'error' => 'Método no permitido']);
                 exit;
             }
 
-            // Leer JSON crudo
+            // Leer el JSON crudo
             $raw = file_get_contents("php://input");
             $data = json_decode($raw, true);
 
+            // Validar que JSON sea válido
             if (!$data) {
                 http_response_code(400);
                 echo json_encode(['success' => false, 'error' => 'JSON inválido']);
                 exit;
             }
 
-            // Validar campos
             $nombre = $data['NOMBRE'] ?? '';
             $descripcion = $data['DESCRIPCION'] ?? '';
             $precio = $data['PRECIO'] ?? 0;
             $categoria = $data['CATEGORIA_ID'] ?? 0;
             $imagen = $data['IMAGEN'] ?? '';
+            $oferta = $data['OFERTA_ID'] ?? null; 
 
             if (!$nombre || !$descripcion || !$precio || !$categoria) {
                 http_response_code(400);
@@ -306,25 +343,21 @@
                 exit;
             }
 
-            // Crear objeto producto
             $producto = new Productos();
             $producto->setNOMBRE($nombre);
             $producto->setDESCRIPCION($descripcion);
             $producto->setPRECIO($precio);
             $producto->setCATEGORIA_ID($categoria);
             $producto->setIMAGEN($imagen);
+            $producto->setOFERTA_ID($oferta); 
 
-            // Insertar usando DAO
             $ok = ProductosDAO::createProducto($producto);
 
             if ($ok['success'] ?? false) {
                 echo json_encode(['success' => true]);
             } else {
                 http_response_code(500);
-                echo json_encode([
-                    'success' => false,
-                    'error' => $ok['error'] ?? 'No se pudo crear el producto'
-                ]);
+                echo json_encode(['success' => false, 'error' => $ok['error'] ?? 'No se pudo crear el producto']);
             }
 
             exit;
@@ -374,11 +407,13 @@
             echo json_encode($data);
             exit;
         }
+
+        
         public function createPedido() {
             header('Content-Type: application/json; charset=utf-8');
 
             $method = $_SERVER['REQUEST_METHOD'];
-            if ($method !== 'PUT' && $method !== 'POST') {
+            if ($method !== 'PUT') {
                 http_response_code(405);
                 echo json_encode(['success' => false, 'error' => 'Método no permitido']);
                 exit;
@@ -406,7 +441,7 @@
                 exit;
             }
 
-            // 1️⃣ Crear el pedido
+            //Crear el pedido
             $pedido = new Pedidos();
             $pedido->setUSUARIO_ID($usuarioId);
             $pedido->setFECHA(date('Y-m-d H:i:s'));
@@ -431,7 +466,7 @@
 
             $pedidoId = $result['pedido_id'];
 
-            // 2️⃣ Crear las líneas del pedido
+            // Crear las líneas del pedido
             foreach ($carrito as $item) {
                 $linea = new LineaPedidos();
                 $linea->setPEDIDO_ID($pedidoId);
@@ -451,52 +486,71 @@
         public function updatePedido() {
             header('Content-Type: application/json; charset=utf-8');
 
-            if ($_SERVER['REQUEST_METHOD'] !== 'PUT' && $_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $method = $_SERVER['REQUEST_METHOD'];
+            if ($method !== 'PUT') {
+                http_response_code(405);
                 echo json_encode(['success' => false, 'error' => 'Método no permitido']);
                 exit;
             }
 
+            // Leer el JSON crudo
             $raw = file_get_contents("php://input");
             $data = json_decode($raw, true);
 
+            // Validar que JSON sea válido
             if (!$data) {
+                http_response_code(400);
                 echo json_encode(['success' => false, 'error' => 'JSON inválido']);
                 exit;
             }
 
-            $id = $data['PEDIDO_ID'] ?? null;
+            // Validar campos usando ?? para evitar notices
+            $id        = $data['PEDIDO_ID'] ?? null;
             $usuarioId = $data['USUARIO_ID'] ?? null;
-            $fecha = $data['FECHA'] ?? '';
-            $estado = $data['ESTADO'] ?? '';
-            $total = $data['TOTAL'] ?? 0;
+            $fecha     = $data['FECHA'] ?? null;
+            $total     = $data['TOTAL'] ?? null;
+            $direccion = $data['DIRECCION'] ?? '';
+            $telefono  = $data['TELEFONO'] ?? '';
+            $codigo    = $data['CODIGO_POSTAL'] ?? '';
+            $estado    = $data['ESTADO'] ?? '';
 
-            if (!$id || !$usuarioId || !$fecha || !$estado || !$total) {
+            if (!$id || !$usuarioId || !$fecha || !$total || !$estado) {
+                http_response_code(400);
                 echo json_encode(['success' => false, 'error' => 'Faltan campos obligatorios']);
                 exit;
             }
 
+            // Crear el objeto Pedido
             $pedido = new Pedidos();
             $pedido->setPEDIDO_ID($id);
             $pedido->setUSUARIO_ID($usuarioId);
             $pedido->setFECHA($fecha);
-            $pedido->setESTADO($estado);
             $pedido->setTOTAL($total);
+            $pedido->setDIRECCION($direccion);
+            $pedido->setTELEFONO($telefono);
+            $pedido->setCODIGO_POSTAL($codigo);
+            $pedido->setESTADO($estado);
 
-            $ok = PedidosDAO::updatePedido($pedido);
+            // Actualizar usando DAO
+            $result = PedidosDAO::updatePedido($pedido);
 
-            // Garantizar respuesta consistente para JS
-            if ($ok['success'] ?? false) {
+            if ($result['success']) {
                 echo json_encode(['success' => true]);
             } else {
-                echo json_encode(['success' => false, 'error' => $ok['error'] ?? 'No se pudo actualizar el pedido']);
+                http_response_code(500);
+                echo json_encode(['success' => false, 'error' => $result['error']]);
             }
+
             exit;
         }
 
+
+        // Eliminar un pedido (DELETE)
         public function deletePedido() {
             header('Content-Type: application/json; charset=utf-8');
 
             if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+                http_response_code(405);
                 echo json_encode(['success' => false, 'error' => 'Método no permitido']);
                 exit;
             }
@@ -504,16 +558,37 @@
             $id = $_GET['id'] ?? null;
 
             if (!$id) {
+                http_response_code(400);
                 echo json_encode(['success' => false, 'error' => 'ID no recibido']);
                 exit;
             }
 
             $ok = PedidosDAO::deletePedido($id);
-            echo json_encode($ok);
+
+            if ($ok['success'] ?? false) {
+                echo json_encode(['success' => true]);
+            } else {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'error' => $ok['error'] ?? 'No se pudo eliminar el pedido']);
+            }
+
             exit;
         }
 
+        /*********************************************OFERTAS*************************************************************/
 
+        public function getOfertas() {
+            header('Content-Type: application/json; charset=utf-8');
+
+            $ofertas = OfertasDAO::getOfertas();
+            $data = [];
+
+            foreach ($ofertas as $o) {
+                $data[] = $o->toArray();
+            }
+
+            echo json_encode($data);
+            exit;
+        }
     }
-
 ?>

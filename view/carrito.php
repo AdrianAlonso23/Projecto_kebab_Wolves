@@ -9,7 +9,7 @@
             <div class="carrito-pagina">
                 <div id="carritoPaginaContenido"></div>
                 <div class="footer-carrito">
-                    <a href="index.html" class="seguir-comprando">Seguir Comprando</a>
+                    <a href="?controller=Carta&action=index" class="seguir-comprando">Seguir Comprando</a>
                 </div>
             </div>
 
@@ -43,9 +43,9 @@
                             <input type="text" id="direccion" name="direccion" required>
                         </div>
 
-                        <div class="codigo-postal">
-                            <label for="codigopostal">Código Postal:</label>
-                            <input type="text" id="codigopostal" name="codigopostal" required>
+                        <div class="codigoPostal">
+                            <label for="codigoPostal">Código Postal:</label>
+                            <input type="text" id="codigoPostal" name="codigoPostal" required>
                         </div>
                     </div>
                 </div>
@@ -68,7 +68,7 @@
                 <div class="fila">
                     <div>
                         <label class="resumen-label">Fecha Caducidad:</label>
-                        <input type="number">
+                        <input type="text">
                     </div>
                     <div>
                         <label class="resumen-label">CVC:</label>

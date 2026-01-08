@@ -3,10 +3,12 @@
     include_once "model/CategoriasDAO.php";
     include_once "model/UsuarioDAO.php";
     include_once "model/PedidosDAO.php";
+    include_once "model/OfertasDAO.php";
 
     class AdminController {
 
         public function index() {
+            $ofertas = OfertasDAO::getOfertas();
             $view = "admin.php";
             include "view/main.php";
         }

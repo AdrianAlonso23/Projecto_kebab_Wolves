@@ -10,7 +10,7 @@
 <body>
     <div>
          <div>
-            <?php include("header.php")?>
+            <?php require_once 'header.php'?>
         </div>
     </div>
     <?php include "view/" . $view; ?>

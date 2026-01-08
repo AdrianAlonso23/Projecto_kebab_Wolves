@@ -122,8 +122,9 @@
             }
 
             // 7. Vaciar carrito del navegador (JS se encargará)
+            unset($_SESSION['carrito']);
             // 8. Redirigir a confirmación
-            header("Location: index.php?controller=carrito&action=confirmacion&pedido_id=$pedidoId");
+            header("Location: index.php?controller=Carta&action=index");
             exit;
         }
 
