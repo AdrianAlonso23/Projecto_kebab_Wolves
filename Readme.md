@@ -1,4 +1,4 @@
-# 🥪 Proyecto Web Restaurante
+# Proyecto Web Restaurante
 
 ## Descripción del proyecto
 Este proyecto consiste en una **aplicación web de comercio de restauración**. Permite a los usuarios seleccionar productos de un restaurante, agregarlos a un carrito, realizar pedidos y consultar su historial.  
