@@ -1,9 +1,8 @@
 // Clase Pedido
 class Pedido {
-    constructor(PEDIDO_ID, USUARIO_ID, NOMBRE_USUARIO, FECHA, TOTAL, DIRECCION, ESTADO, LINEAS = []) {
+    constructor(PEDIDO_ID, USUARIO_ID, FECHA, TOTAL, DIRECCION, ESTADO, LINEAS = []) {
         this.PEDIDO_ID = PEDIDO_ID;
         this.USUARIO_ID = USUARIO_ID;         
-        this.NOMBRE_USUARIO = NOMBRE_USUARIO; 
         this.FECHA = FECHA;
         this.TOTAL = TOTAL;
         this.DIRECCION = DIRECCION;
@@ -86,7 +85,7 @@ function mostrarPedidos() {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${p.PEDIDO_ID}</td>
-            <td>${p.NOMBRE_USUARIO}</td>
+            <td>${p.USUARIO_ID}</td>
             <td>${p.FECHA}</td>
             <td>${p.TOTAL} ${simbolo}</td>
             <td>${p.DIRECCION ?? '—'}</td>

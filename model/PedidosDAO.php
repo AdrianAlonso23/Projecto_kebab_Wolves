@@ -149,14 +149,14 @@ class PedidosDAO {
 
         // Bind con tipos correctos: i=integer, s=string, d=double
         $stmt->bind_param(
-            "isdssssi",
-            $usuarioId,
-            $fecha,
-            $total,
-            $direccion,
-            $telefono,
-            $estado,
-            $id
+            "isdsssi",
+            $usuarioId,   
+            $fecha,       
+            $total,       
+            $direccion,   
+            $telefono,    
+            $estado,      
+            $id           
         );
 
         if (!$stmt->execute()) {

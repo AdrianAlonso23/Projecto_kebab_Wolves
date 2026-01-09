@@ -511,7 +511,6 @@
             $total     = $data['TOTAL'] ?? null;
             $direccion = $data['DIRECCION'] ?? '';
             $telefono  = $data['TELEFONO'] ?? '';
-            $codigo    = $data['CODIGO_POSTAL'] ?? '';
             $estado    = $data['ESTADO'] ?? '';
 
             if (!$id || !$usuarioId || !$fecha || !$total || !$estado) {
@@ -528,7 +527,6 @@
             $pedido->setTOTAL($total);
             $pedido->setDIRECCION($direccion);
             $pedido->setTELEFONO($telefono);
-            $pedido->setCODIGO_POSTAL($codigo);
             $pedido->setESTADO($estado);
 
             // Actualizar usando DAO
